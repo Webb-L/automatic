@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="1.设置要选择的文本"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/et_findText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请用“/”隔开要选择的文字。"
+        android:textColor="@android:color/darker_gray"
+        android:text="无不良病状/无不良病状/一致，未离开昨天所在地区/惠州市/绿色/无/否（未接触）/是，情况属实/确认已认真查看，并填写信息无误" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="如：“无不良病状/无不良病状/一致，未离开昨天所在地区”"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/bt_checkInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="检测输入的内容" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="2.开启辅助功能/无障碍"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <Switch
+        android:id="@+id/serviceStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:text="服务状态："
+        android:textColor="#ccc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

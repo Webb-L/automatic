@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">自动操作</string>
+    <string name="AccessibilityDescription">获取你的页面内容并检查是否有你设置的选项。</string>
 </resources>

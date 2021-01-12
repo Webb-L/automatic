@@ -2,13 +2,66 @@ package top.webb_l.automatic;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.Toast;
+
+import java.time.LocalDate;
+
+import top.webb_l.automatic.service.AutoAccessibilityService;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Switch serviceStatus;
+    private EditText etFindText;
+    private Button btCheckInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        serviceStatus = findViewById(R.id.serviceStatus);
+        etFindText = findViewById(R.id.et_findText);
+        btCheckInput = findViewById(R.id.bt_checkInput);
+
+
+        serviceStatus.setChecked(AutoAccessibilityService.isStatus());
+        serviceStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                try {
+                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                } catch (Exception e) {
+                    startActivity(new Intent(Settings.ACTION_SETTINGS));
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        btCheckInput.setOnClickListener(v -> {
+            String texts = etFindText.getText().toString().trim();
+            if (TextUtils.isEmpty(texts)) {
+                Toast.makeText(MainActivity.this, "请输入要查找的内容！", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            serviceStatus.setClickable(true);
+            serviceStatus.setTextColor(getColor(R.color.black));
+            AutoAccessibilityService.findText = texts.split("/");
+        });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        serviceStatus.setChecked(AutoAccessibilityService.isStatus());
     }
 }
