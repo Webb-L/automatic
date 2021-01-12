@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">自动操作</string>
     <string name="AccessibilityDescription">获取你的页面内容并检查是否有你设置的选项。</string>
+    <string name="step1">1.设置要选择的文本</string>
+    <string name="step2">1.设置要选择的文本</string>
+    <string name="serviceStatus">服务状态：</string>
+    <string name="hintText">请用“/”隔开要选择的文字。</string>
+    <string name="promptText">如：“无不良病状/无不良病状/一致，未离开昨天所在地区”</string>
+    <string name="inputText">检测输入的内容</string>
 </resources>

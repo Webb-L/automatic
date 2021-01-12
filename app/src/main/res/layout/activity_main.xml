@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1.设置要选择的文本"
+        android:text="@string/step1"
         android:textSize="18sp"
         android:textColor="@color/black"/>
 
@@ -19,27 +19,27 @@
         android:id="@+id/et_findText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请用“/”隔开要选择的文字。"
+        android:hint="@string/hintText"
         android:textColor="@android:color/darker_gray"
         android:text="无不良病状/无不良病状/一致，未离开昨天所在地区/惠州市/绿色/无/否（未接触）/是，情况属实/确认已认真查看，并填写信息无误" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="如：“无不良病状/无不良病状/一致，未离开昨天所在地区”"
+        android:text="@string/promptText"
         android:textSize="12sp" />
 
     <Button
         android:id="@+id/bt_checkInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="检测输入的内容" />
+        android:text="@string/inputText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="2.开启辅助功能/无障碍"
+        android:text="@string/step2"
         android:textSize="18sp"
         android:textColor="@color/black"/>
 
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:text="服务状态："
+        android:text="@string/serviceStatus"
         android:textColor="#ccc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
