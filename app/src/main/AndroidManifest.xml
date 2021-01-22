@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="top.webb_l.automatic">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoAccessibility">
+        <activity
+            android:name=".acitivity.SelectPackageActivity"
+            android:label="@string/select_package"
+            android:theme="@style/Theme.AutoAccessibility.NoActionBar"></activity>
+        <activity android:name=".acitivity.AddStepActivity" /> <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
         <service
             android:name=".service.AutoAccessibilityService"
             android:enabled="true"
@@ -18,12 +25,13 @@
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/auto_accessibility_service_config" />
         </service>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".acitivity.Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
