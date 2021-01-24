@@ -1,13 +1,11 @@
 package top.webb_l.automatic.acitivity;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -47,5 +45,4 @@ public class Main2Activity extends AppCompatActivity {
         rvData = findViewById(R.id.rv_data);
         fabAdd = findViewById(R.id.fab_add);
     }
-
 }

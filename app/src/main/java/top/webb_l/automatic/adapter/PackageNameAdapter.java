@@ -1,9 +1,6 @@
 package top.webb_l.automatic.adapter;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageInfo;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.security.KeyStore;
 import java.util.List;
 
 import top.webb_l.automatic.R;
-import top.webb_l.automatic.acitivity.AddStepActivity;
-import top.webb_l.automatic.arrayList.AppInfo;
+import top.webb_l.automatic.data.AppInfo;
 
 public class PackageNameAdapter extends RecyclerView.Adapter<PackageNameAdapter.ViewHolder> {
     private List<AppInfo> apps = null;

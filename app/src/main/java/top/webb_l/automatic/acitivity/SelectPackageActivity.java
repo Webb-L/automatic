@@ -1,15 +1,18 @@
 package top.webb_l.automatic.acitivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -19,20 +22,38 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.PackageNameAdapter;
-import top.webb_l.automatic.arrayList.AppInfo;
+import top.webb_l.automatic.data.AppInfo;
 
 public class SelectPackageActivity extends AppCompatActivity {
     private boolean status = false;
     private RecyclerView activityList;
     private RecyclerView appInfos;
     private CollapsingToolbarLayout toolBarLayout;
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            loading.setVisibility(View.GONE);
+            appInfos.setLayoutManager(new LinearLayoutManager(SelectPackageActivity.this));
+            PackageNameAdapter packageNameAdapter = new PackageNameAdapter(SelectPackageActivity.this);
+            List<AppInfo> packageInfoList = getPackageInfoList();
+            packageNameAdapter.setApps(packageInfoList);
+            appInfos.setAdapter(packageNameAdapter);
+            packageNameAdapter.setOnItemClickListener(packageInfo -> {
+                status = true;
+                toolBarLayout.setTitle(getResources().getString(R.string.select_activity));
+                ArrayList<AppInfo> activities = getActivitiesByApplication(packageInfo);
+                showActivityList(activities);
+            });
+        }
+    };
+    private LinearLayout loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +63,6 @@ public class SelectPackageActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        appInfos = findViewById(R.id.app_list);
-        activityList = findViewById(R.id.activity_list);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -55,23 +73,13 @@ public class SelectPackageActivity extends AppCompatActivity {
         toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            startActivity(new Intent(SelectPackageActivity.this, AddStepActivity.class));
-            finish();
-        });
+        appInfos = findViewById(R.id.app_list);
+        activityList = findViewById(R.id.activity_list);
 
-        appInfos.setLayoutManager(new LinearLayoutManager(this));
-        PackageNameAdapter packageNameAdapter = new PackageNameAdapter(this);
-        List<AppInfo> packageInfoList = getPackageInfoList();
-        packageNameAdapter.setApps(packageInfoList);
-        appInfos.setAdapter(packageNameAdapter);
-        packageNameAdapter.setOnItemClickListener(packageInfo -> {
-            status = true;
-            toolBarLayout.setTitle(getResources().getString(R.string.select_activity));
-            ArrayList<AppInfo> activities = getActivitiesByApplication(packageInfo);
-            showActivityList(activities);
-        });
+        loading = (LinearLayout) findViewById(R.id.loading);
+        loading.setOnTouchListener((v, event) -> false);
+
+        mHandler.sendEmptyMessage(0);
     }
 
     /**
@@ -88,6 +96,8 @@ public class SelectPackageActivity extends AppCompatActivity {
         activityList.setAdapter(packageNameAdapter);
         packageNameAdapter.setOnItemClickListener(appInfo -> {
             Intent intent = new Intent(this, AddStepActivity.class);
+            intent.putExtra("packageName", appInfo.getPackageName());
+            intent.putExtra("activity", appInfo.getApplicationInfo().packageName);
             startActivity(intent);
         });
     }

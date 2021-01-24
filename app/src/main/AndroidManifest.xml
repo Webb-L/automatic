@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="top.webb_l.automatic">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +14,10 @@
         <activity
             android:name=".acitivity.SelectPackageActivity"
             android:label="@string/select_package"
-            android:theme="@style/Theme.AutoAccessibility.NoActionBar"></activity>
-        <activity android:name=".acitivity.AddStepActivity" /> <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
+            android:theme="@style/Theme.AutoAccessibility.NoActionBar" />
+        <activity android:name=".acitivity.AddStepActivity" />
+        <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
+        <activity android:name=".MainActivity" />
         <service
             android:name=".service.AutoAccessibilityService"
             android:enabled="true"

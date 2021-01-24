@@ -1,35 +1,51 @@
 package top.webb_l.automatic.adapter;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import java.util.ArrayList;
+
 import top.webb_l.automatic.R;
+import top.webb_l.automatic.acitivity.AddStepActivity;
+import top.webb_l.automatic.data.StepInfo;
 
 
 public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHolder> {
-    private final static String TAG = AddStepAdapter.class.getName();
-    private int number = 5;
+    ArrayList<StepInfo> stepInfos = new ArrayList<>();
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView stepTitle;
-        TextView stepDescription;
-        ImageButton stepDetailsStatus;
-        LinearLayout stepDetails;
+        MaterialCardView stepDetailsStatus;
+        ImageButton stepDetailEdit;
+        LinearLayout stepDetails, stepControl;
+        ChipGroup stepEvent;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             stepTitle = itemView.findViewById(R.id.step_title);
-            stepDescription = itemView.findViewById(R.id.step_description);
             stepDetailsStatus = itemView.findViewById(R.id.step_details_status);
+            stepDetailEdit = itemView.findViewById(R.id.step_edit);
             stepDetails = itemView.findViewById(R.id.ll_step_details);
+            stepControl = itemView.findViewById(R.id.step_control);
+            stepEvent = itemView.findViewById(R.id.step_event);
         }
     }
 
@@ -43,31 +59,68 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.stepTitle.setText("步骤" + position + ":");
-        holder.stepDescription.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut lectus arcu. Nulla sed elit sapien. Maecenas luctus libero ut feugiat lobortis. Ut sed enim at nisl porttitor posuere et ut mauris. Nulla tincidunt nisl quis ipsum iaculis, at feugiat felis auctor. Aliquam sit amet dolor at eros mollis ultrices. Quisque nec consectetur justo, eu placerat arcu. Integer auctor dui et mauris blandit, ac mattis neque interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nullam dapibus lacinia neque. Vestibulum malesuada maximus arcu. In hac habitasse platea dictumst. Sed molestie volutpat tortor vitae tincidunt. Vestibulum sit amet venenatis sapien.");
-
+        StepInfo stepInfo = stepInfos.get(position);
+        holder.stepTitle.setText("步骤" + (position + 1) + ":");
+        Chip checkEvent = (Chip) holder.stepEvent.getChildAt(stepInfo.getEvent());
+        if (checkEvent != null) {
+            checkEvent.setChecked(true);
+        }
         holder.stepDetailsStatus.setOnClickListener(v -> {
             if (holder.stepDetails.getVisibility() == View.GONE) {
                 holder.stepDetails.setVisibility(View.VISIBLE);
-                holder.stepDetailsStatus.setImageResource(R.drawable.ic_keyboard_arrow_up_24dp);
-                holder.stepDescription.setEllipsize(null);
-                holder.stepDescription.setSingleLine(false);
+                Log.d("TAG", "onBindViewHolder: "+stepInfo.getControl());
+                switch (stepInfo.getControl()) {
+                    case 1:
+                        Button button = new Button(holder.stepControl.getContext());
+                        button.setText(R.string.chip_button);
+                        holder.stepControl.addView(button);
+                        break;
+                    case 2:
+                        ImageView image = new ImageView(holder.stepControl.getContext());
+                        image.setImageResource(R.drawable.ic_extension_off_64dp);
+                        holder.stepControl.addView(image);
+                        break;
+                    case 3:
+                        TextView text = new TextView(holder.stepControl.getContext());
+                        text.setText(R.string.chip_text);
+                        holder.stepControl.addView(text);
+                        break;
+                    case 4:
+                        CheckBox checkBox = new CheckBox(holder.stepControl.getContext());
+                        checkBox.setText(R.string.chip_checkbox);
+                        holder.stepControl.addView(checkBox);
+                        break;
+                    case 5:
+                        RadioButton radioButton = new RadioButton(holder.stepControl.getContext());
+                        radioButton.setText(R.string.chip_radiobutton);
+                        holder.stepControl.addView(radioButton);
+                        break;
+                    case 6:
+                        EditText editText = new EditText(holder.stepControl.getContext());
+                        editText.setText(R.string.chip_editText);
+                        holder.stepControl.addView(editText);
+                        break;
+                    default:
+                        break;
+                }
             } else {
                 holder.stepDetails.setVisibility(View.GONE);
-                holder.stepDetailsStatus.setImageResource(R.drawable.ic_keyboard_arrow_down_24dp);
-                holder.stepDescription.setEllipsize(TextUtils.TruncateAt.END);
-                holder.stepDescription.setSingleLine(false);
-                holder.stepDescription.setLines(3);
+                if (holder.stepControl.getChildCount() > 1) {
+                    holder.stepControl.removeViewAt(1);
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return number;
+        return stepInfos.size();
     }
 
-    public void addStep(){
-        number++;
+    public void addStep(ArrayList<StepInfo> stepInfos) {
+        if (stepInfos.size() > 0) {
+            AddStepActivity.mHandler.sendEmptyMessage(0);
+        }
+        this.stepInfos = stepInfos;
     }
 }

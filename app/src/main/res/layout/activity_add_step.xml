@@ -21,31 +21,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include layout="@layout/content_not_data" />
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="0dp">
+            android:paddingBottom="16dp">
 
-            <LinearLayout
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_data"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/add_step"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/add_step_button"
-                    app:icon="@drawable/ic_add_24dp" />
-            </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/add_step"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="16dp"
+                        android:text="@string/add_step_button"
+                        app:icon="@drawable/ic_add_24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rv_data" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -74,7 +87,7 @@
             android:id="@+id/backdrop_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="150dp"
             android:background="@drawable/add_step_backdrop_background_purple_500"
             android:orientation="vertical">
 
@@ -109,16 +122,16 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="查找："
+                                android:text="@string/step_search"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
                             <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chip_search"
                                 style="@style/Widget.MaterialComponents.ChipGroup"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                app:checkedChip="@+id/chip_content"
                                 app:singleSelection="true">
 
                                 <com.google.android.material.chip.Chip
@@ -138,6 +151,7 @@
                             </com.google.android.material.chip.ChipGroup>
 
                             <EditText
+                                android:id="@+id/search_content"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -161,16 +175,16 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="选择控件："
+                                android:text="@string/select_control"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
                             <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chip_control"
                                 style="@style/Widget.MaterialComponents.ChipGroup"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                app:checkedChip="@+id/chip_button"
                                 app:singleSelection="true">
 
                                 <com.google.android.material.chip.Chip
@@ -193,6 +207,13 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/chip_text" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip_radiobutton"
+                                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/chip_radiobutton" />
 
                                 <com.google.android.material.chip.Chip
                                     android:id="@+id/chip_checkbox"
@@ -235,6 +256,7 @@
                             android:textSize="16sp" />
 
                         <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chip_event"
                             style="@style/Widget.MaterialComponents.ChipGroup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -247,7 +269,7 @@
                                 style="@style/Widget.MaterialComponents.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/chip_check" />
+                                android:text="@string/chip_click" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chip_press"

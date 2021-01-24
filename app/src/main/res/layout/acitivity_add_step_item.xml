@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/step_details_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="8dp">
             <!--标题-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,28 +30,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Title"
                     android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <ImageButton
-                    android:id="@+id/step_details_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#0000"
-                    android:paddingStart="35dp"
-                    android:src="@drawable/ic_keyboard_arrow_down_24dp" />
+                    android:id="@+id/step_edit"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/edit_step"
+                    android:src="@drawable/ic_edit_18dp" />
             </LinearLayout>
-            <!--描述-->
-            <TextView
-                android:id="@+id/step_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="description"
-                android:lines="3"
-                android:ellipsize="end"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary" />
+
             <!--详细信息-->
             <LinearLayout
                 android:id="@+id/ll_step_details"
@@ -59,13 +49,8 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="#ccc" />
-
                 <LinearLayout
+                    android:id="@+id/step_control"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -76,12 +61,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="控件：" />
+                        android:text="@string/step_item_control" />
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="按钮" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -92,55 +74,40 @@
                     android:padding="8dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="事件：" />
+                        android:text="@string/step_item_event" />
 
                     <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/step_event"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="点击"
-                            android:checkable="false"
-                            android:focusable="false"
-                            app:chipStrokeColor="#ccc"
-                            app:chipStrokeWidth="1dp"
-                            app:chipBackgroundColor="#0000"
-                            />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="长按"
-                            android:checkable="false"
-                            android:focusable="false"
-                            app:chipStrokeColor="#ccc"
-                            app:chipStrokeWidth="1dp"
-                            app:chipBackgroundColor="#0000"
-                            />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="复制"
-                            android:checkable="false"
-                            android:focusable="false"
-                            app:chipBackgroundColor="#0000"
-                            app:chipStrokeColor="#ccc"
-                            app:chipStrokeWidth="1dp"
-                            />
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
                             style="@style/Widget.MaterialComponents.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="粘贴"
-                            />
+                            android:text="@string/chip_click" />
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chip_press" />
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chip_copy" />
+
+                        <com.google.android.material.chip.Chip
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chip_paste" />
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
             </LinearLayout>

@@ -1,4 +1,4 @@
-package top.webb_l.automatic.arrayList;
+package top.webb_l.automatic.data;
 
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
