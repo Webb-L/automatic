@@ -6,19 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import java.time.LocalDate;
-
 import top.webb_l.automatic.service.AutoAccessibilityService;
 
-public class MainActivity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity {
 
     private Switch serviceStatus;
     private EditText etFindText;
@@ -27,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         serviceStatus = findViewById(R.id.serviceStatus);
         etFindText = findViewById(R.id.et_findText);
         btCheckInput = findViewById(R.id.bt_checkInput);
@@ -48,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         btCheckInput.setOnClickListener(v -> {
             String texts = etFindText.getText().toString().trim();
             if (TextUtils.isEmpty(texts)) {
-                Toast.makeText(MainActivity.this, "请输入要查找的内容！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Main2Activity.this, "请输入要查找的内容！", Toast.LENGTH_SHORT).show();
                 return;
             }
             serviceStatus.setClickable(true);

@@ -1,6 +1,5 @@
 package top.webb_l.automatic.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 
 import top.webb_l.automatic.R;
-import top.webb_l.automatic.acitivity.AddStepActivity;
 import top.webb_l.automatic.data.StepInfo;
 
 
@@ -68,7 +66,6 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
         holder.stepDetailsStatus.setOnClickListener(v -> {
             if (holder.stepDetails.getVisibility() == View.GONE) {
                 holder.stepDetails.setVisibility(View.VISIBLE);
-                Log.d("TAG", "onBindViewHolder: "+stepInfo.getControl());
                 switch (stepInfo.getControl()) {
                     case 1:
                         Button button = new Button(holder.stepControl.getContext());
@@ -118,9 +115,6 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
     }
 
     public void addStep(ArrayList<StepInfo> stepInfos) {
-        if (stepInfos.size() > 0) {
-            AddStepActivity.mHandler.sendEmptyMessage(0);
-        }
         this.stepInfos = stepInfos;
     }
 }

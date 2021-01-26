@@ -2,11 +2,12 @@ package top.webb_l.automatic.acitivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,21 +24,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.AddStepAdapter;
+import top.webb_l.automatic.data.ScriptInfo;
 import top.webb_l.automatic.data.StepInfo;
+
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
 public class AddStepActivity extends AppCompatActivity {
 
     private Button addStep;
     private CoordinatorLayout addStepBackdrop;
     private ExtendedFloatingActionButton saveStep;
-    private static LinearLayout rootNotData;
     private ArrayList<StepInfo> stepInfos = new ArrayList<>();
 
 
@@ -46,7 +52,6 @@ public class AddStepActivity extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 0:
-                    AddStepActivity.rootNotData.setVisibility(View.GONE);
                     break;
                 default:
                     break;
@@ -58,6 +63,7 @@ public class AddStepActivity extends AppCompatActivity {
     private boolean searchType;
     private int checkEvent = -1,
             searchControl = -1;
+    private String packageName, activityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +74,18 @@ public class AddStepActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        initData();
         initView();
-        Intent intent = getIntent();
-//        Toast.makeText(this, intent.getStringExtra("packageName"), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(this, intent.getStringExtra("activity"), Toast.LENGTH_SHORT).show();
-
     }
 
+    private void initData() {
+        Intent intent = getIntent();
+        packageName = intent.getStringExtra("packageName");
+        activityName = intent.getStringExtra("activity");
+    }
     private void initView() {
         setTitle("添加步骤");
-        rootNotData = findViewById(R.id.root_not_data);
-
+        CoordinatorLayout root = findViewById(R.id.root);
         RecyclerView recyclerView = findViewById(R.id.rv_data);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         AddStepAdapter adapter = new AddStepAdapter();
@@ -87,35 +94,74 @@ public class AddStepActivity extends AppCompatActivity {
         addStep = findViewById(R.id.add_step);
         saveStep = findViewById(R.id.save_step);
         addStepBackdrop = findViewById(R.id.add_step_backdrop);
-        LinearLayout backdropBackground = findViewById(R.id.backdrop_background);
-        backdropBackground.setOnClickListener(v -> {
-            addStepBackdrop.setVisibility(View.VISIBLE);
-        });
-        View addStepBackground = findViewById(R.id.add_step_background);
-        addStepBackground.setOnClickListener(v -> {
+
+        // 保存全部步骤。
+        saveAllStep(root);
+        // 处理添加步骤控件显示可以隐藏
+        addBackdropShowStatus();
+        // 选择搜索类型
+        selectSearchType(root);
+        // 选择控件
+        selectControl(root);
+        // 选择事件
+        selectEvents(root);
+        // 校验数据是否正常
+        EditText searchContent = findViewById(R.id.search_content);
+        saveStep.setOnClickListener(v -> {
+            String search = searchContent.getText().toString();
+            if (TextUtils.isEmpty(search) ||
+                    searchControl < 0
+                    || searchControl > 6 ||
+                    checkEvent < 0
+                    || checkEvent > 3) {
+                Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
+                return;
+            }
+            stepInfos.add(new StepInfo(searchType, search, checkEvent, searchControl));
+            adapter.addStep(stepInfos);
+            adapter.notifyDataSetChanged();
+            searchContent.setText("");
             addStepBackdrop.setVisibility(View.GONE);
         });
 
-        addStep.setOnClickListener(v -> {
-            addStepBackdrop.setVisibility(View.VISIBLE);
-        });
+    }
 
-        CoordinatorLayout root = findViewById(R.id.root);
-        // 判断搜索类型
-        ChipGroup chipSearch = findViewById(R.id.chip_search);
-        chipSearch.setOnCheckedChangeListener((group, checkedId) -> {
+    /**
+     * 选择事件
+     * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
+     */
+    private void selectEvents(CoordinatorLayout root) {
+        ChipGroup chipEvent = findViewById(R.id.chip_event);
+        chipEvent.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId <= 0) {
-                Snackbar.make(root, "请选择搜索类型！", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(root, "请选择事件！", LENGTH_SHORT).show();
                 return;
             }
             Chip check = findViewById(checkedId);
-            searchType = check.getText() == getResources().getString(R.string.chip_id);
+            if (getResources().getString(R.string.chip_click) == check.getText()) {
+                checkEvent = 0;
+            }
+            if (getResources().getString(R.string.chip_press) == check.getText()) {
+                checkEvent = 1;
+            }
+            if (getResources().getString(R.string.chip_copy) == check.getText()) {
+                checkEvent = 2;
+            }
+            if (getResources().getString(R.string.chip_paste) == check.getText()) {
+                checkEvent = 3;
+            }
         });
-        // 判断控件
+    }
+
+    /**
+     * 选择需要搜索的控件。
+     * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
+     */
+    private void selectControl(CoordinatorLayout root) {
         ChipGroup chipControl = findViewById(R.id.chip_control);
         chipControl.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId <= 0) {
-                Snackbar.make(root, "请选择控件！", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(root, "请选择控件！", LENGTH_SHORT).show();
                 return;
             }
             Chip check = findViewById(checkedId);
@@ -137,46 +183,87 @@ public class AddStepActivity extends AppCompatActivity {
             if (getResources().getString(R.string.chip_editText) == check.getText()) {
                 searchControl = 6;
             }
-            Log.d("TAG", "initView: "+searchControl);
         });
-        ChipGroup chipEvent = findViewById(R.id.chip_event);
-        chipEvent.setOnCheckedChangeListener((group, checkedId) -> {
+    }
+
+    /**
+     * 选择搜索类型
+     * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
+     */
+    private void selectSearchType(CoordinatorLayout root) {
+        ChipGroup chipSearch = findViewById(R.id.chip_search);
+        chipSearch.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId <= 0) {
-                Snackbar.make(root, "请选择事件！", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(root, "请选择搜索类型！", LENGTH_SHORT).show();
                 return;
             }
             Chip check = findViewById(checkedId);
-            if (getResources().getString(R.string.chip_click) == check.getText()) {
-                checkEvent = 0;
-            }
-            if (getResources().getString(R.string.chip_press) == check.getText()) {
-                checkEvent = 1;
-            }
-            if (getResources().getString(R.string.chip_copy) == check.getText()) {
-                checkEvent = 2;
-            }
-            if (getResources().getString(R.string.chip_paste) == check.getText()) {
-                checkEvent = 3;
-            }
+            searchType = check.getText() == getResources().getString(R.string.chip_id);
         });
+    }
 
-        EditText searchContent = findViewById(R.id.search_content);
-        saveStep.setOnClickListener(v -> {
-            String search = searchContent.getText().toString().trim();
-            if (TextUtils.isEmpty(search) ||
-                    searchControl < 0
-                    || searchControl > 6 ||
-                    checkEvent < 0
-                    || checkEvent > 3) {
-                Snackbar.make(root, "请确保所有内容都填写完成！", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            stepInfos.add(new StepInfo(searchType, search, checkEvent, searchControl));
-            adapter.addStep(stepInfos);
-            adapter.notifyDataSetChanged();
+    /**
+     * 添加数据表单是否显示
+     */
+    private void addBackdropShowStatus() {
+        LinearLayout backdropBackground = findViewById(R.id.backdrop_background);
+        backdropBackground.setOnClickListener(v -> {
+            addStepBackdrop.setVisibility(View.VISIBLE);
+        });
+        View addStepBackground = findViewById(R.id.add_step_background);
+        addStepBackground.setOnClickListener(v -> {
             addStepBackdrop.setVisibility(View.GONE);
         });
+        addStep.setOnClickListener(v -> {
+            addStepBackdrop.setVisibility(View.VISIBLE);
+        });
+    }
 
+    /**
+     * 保存全部步骤
+     * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
+     */
+    private void saveAllStep(CoordinatorLayout root) {
+        FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
+        floatingActionButton.setOnClickListener(v -> {
+            if (stepInfos.size() == 0) {
+                Snackbar.make(root, "你还没添加有步骤！", LENGTH_SHORT).show();
+                return;
+            }
+            View layout = View.inflate(v.getContext(), R.layout.save_all_step, null);
+            AlertDialog alertDialog = new MaterialAlertDialogBuilder(AddStepActivity.this)
+                    .setTitle("保存步骤")
+                    .setView(layout)
+                    .setCancelable(false)
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    })
+                    .setPositiveButton(android.R.string.ok, null)
+                    .create();
+            alertDialog.setOnShowListener(dialog -> {
+                EditText title = layout.findViewById(R.id.title_edit);
+                EditText description = layout.findViewById(R.id.description_edit);
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
+                    String saveTitle = title.getText().toString().trim();
+                    String saveDescription = description.getText().toString().trim();
+                    if (TextUtils.isEmpty(saveTitle) || TextUtils.isEmpty(saveDescription)) {
+                        Snackbar.make(root, "请确保保存步骤所有内容都填写完成！", Snackbar.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Drawable icon = null;
+                    try {
+                        icon = getPackageManager().getApplicationIcon(packageName);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    MainActivity.scripts.add(new ScriptInfo(saveTitle, saveDescription, packageName, activityName, icon, stepInfos));
+                    MainActivity.mHandler.sendEmptyMessage(1);
+                    alertDialog.cancel();
+                    alertDialog.dismiss();
+                    finish();
+                });
+            });
+            alertDialog.show();
+        });
     }
 
 

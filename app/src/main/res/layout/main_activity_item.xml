@@ -8,10 +8,10 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:checkable="true"
         android:clickable="true"
-        android:focusable="true"
-        android:layout_margin="8dp">
+        android:focusable="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,8 +20,10 @@
 
             <!-- Media -->
             <ImageView
+                android:id="@+id/app_icon"
                 android:layout_width="match_parent"
                 android:layout_height="194dp"
+                android:background="@android:color/darker_gray"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_extension_off_64dp" />
 
@@ -33,16 +35,18 @@
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
+                    android:id="@+id/script_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Title"
                     android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <TextView
+                    android:id="@+id/script_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Note: All the optional elements of a card's content (with the exception of the checked icon) are implemented through the use of other views/components, as shown in the card examples section."
+                    android:ellipsize="end"
+                    android:lines="5"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary" />
 
@@ -56,17 +60,19 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/use_button"
                     style="?attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="使用" />
+                    android:text="@string/use" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete_button"
                     style="?attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="删除" />
+                    android:text="@string/delete" />
             </LinearLayout>
 
         </LinearLayout>

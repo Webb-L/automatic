@@ -35,6 +35,7 @@ public class SelectPackageActivity extends AppCompatActivity {
     private RecyclerView activityList;
     private RecyclerView appInfos;
     private CollapsingToolbarLayout toolBarLayout;
+    private List<AppInfo> packageInfoList;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -42,13 +43,14 @@ public class SelectPackageActivity extends AppCompatActivity {
             loading.setVisibility(View.GONE);
             appInfos.setLayoutManager(new LinearLayoutManager(SelectPackageActivity.this));
             PackageNameAdapter packageNameAdapter = new PackageNameAdapter(SelectPackageActivity.this);
-            List<AppInfo> packageInfoList = getPackageInfoList();
+            packageInfoList = getPackageInfoList();
             packageNameAdapter.setApps(packageInfoList);
             appInfos.setAdapter(packageNameAdapter);
+            toolBarLayout.setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.size() + ")");
             packageNameAdapter.setOnItemClickListener(packageInfo -> {
                 status = true;
-                toolBarLayout.setTitle(getResources().getString(R.string.select_activity));
                 ArrayList<AppInfo> activities = getActivitiesByApplication(packageInfo);
+                toolBarLayout.setTitle(getResources().getString(R.string.select_activity) + "(" + activities.size() + ")");
                 showActivityList(activities);
             });
         }
@@ -76,7 +78,7 @@ public class SelectPackageActivity extends AppCompatActivity {
         appInfos = findViewById(R.id.app_list);
         activityList = findViewById(R.id.activity_list);
 
-        loading = (LinearLayout) findViewById(R.id.loading);
+        loading = findViewById(R.id.loading);
         loading.setOnTouchListener((v, event) -> false);
 
         mHandler.sendEmptyMessage(0);
@@ -96,9 +98,10 @@ public class SelectPackageActivity extends AppCompatActivity {
         activityList.setAdapter(packageNameAdapter);
         packageNameAdapter.setOnItemClickListener(appInfo -> {
             Intent intent = new Intent(this, AddStepActivity.class);
-            intent.putExtra("packageName", appInfo.getPackageName());
-            intent.putExtra("activity", appInfo.getApplicationInfo().packageName);
+            intent.putExtra("packageName", appInfo.getApplicationInfo().packageName);
+            intent.putExtra("activity", appInfo.getPackageName());
             startActivity(intent);
+            finish();
         });
     }
 
@@ -168,7 +171,7 @@ public class SelectPackageActivity extends AppCompatActivity {
         if (status) {
             activityList.setVisibility(View.GONE);
             appInfos.setVisibility(View.VISIBLE);
-            toolBarLayout.setTitle(getResources().getString(R.string.select_package));
+            toolBarLayout.setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.size() + ")");
             status = false;
             return false;
         }

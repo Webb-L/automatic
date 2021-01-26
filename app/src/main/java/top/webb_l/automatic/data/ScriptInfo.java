@@ -13,8 +13,7 @@ public class ScriptInfo {
     private Drawable icon;
     private ArrayList<StepInfo> steps;
 
-    public ScriptInfo(int id, String title, String description, String packageName, String activity, Drawable icon, ArrayList<StepInfo> steps) {
-        this.id = id;
+    public ScriptInfo(String title, String description, String packageName, String activity, Drawable icon, ArrayList<StepInfo> steps) {
         this.title = title;
         this.description = description;
         this.packageName = packageName;

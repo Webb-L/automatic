@@ -123,4 +123,8 @@
     <string name="step_search">查找：</string>
     <string name="step_item_control">控件：</string>
     <string name="step_item_event">事件：</string>
+    <string name="save_all_step_title">标题</string>
+    <string name="save_all_step_description">描述</string>
+    <string name="use">使用</string>
+    <string name="delete">删除</string>
 </resources>

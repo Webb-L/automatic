@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".acitivity.Main2Activity">
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".Main2Activity">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/step1"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/et_findText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:hint="@string/hintText"
+        android:textColor="@android:color/darker_gray"
+        android:text="无不良病状/无不良病状/一致，未离开昨天所在地区/惠州市/绿色/无/否（未接触）/是，情况属实/确认已认真查看，并填写信息无误" />
 
-        <include layout="@layout/content_not_data"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/promptText"
+        android:textSize="12sp" />
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="50dp">
+    <Button
+        android:id="@+id/bt_checkInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/inputText" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.core.widget.NestedScrollView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/step2"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
 
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/brb_search"
-            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:fabAlignmentMode="end"
-            app:hideOnScroll="true"
-            app:menu="@menu/bottom_app_bar" />
+    <Switch
+        android:id="@+id/serviceStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:text="@string/serviceStatus"
+        android:textColor="#ccc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/main_create_automatic"
-            app:layout_anchor="@id/brb_search"
-            app:srcCompat="@drawable/ic_add_24dp" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

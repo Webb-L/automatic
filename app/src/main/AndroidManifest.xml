@@ -17,7 +17,7 @@
             android:theme="@style/Theme.AutoAccessibility.NoActionBar" />
         <activity android:name=".acitivity.AddStepActivity" />
         <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Main2Activity" />
         <service
             android:name=".service.AutoAccessibilityService"
             android:enabled="true"
@@ -33,7 +33,7 @@
                 android:resource="@xml/auto_accessibility_service_config" />
         </service>
 
-        <activity android:name=".acitivity.Main2Activity">
+        <activity android:name=".acitivity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

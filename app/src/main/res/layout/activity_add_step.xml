@@ -85,7 +85,7 @@
             android:id="@+id/backdrop_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/add_step_backdrop_background_purple_500"
             android:orientation="vertical">
 
