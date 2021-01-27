@@ -114,7 +114,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
         return stepInfos.size();
     }
 
-    public void addStep(ArrayList<StepInfo> stepInfos) {
+    public void setStep(ArrayList<StepInfo> stepInfos) {
         this.stepInfos = stepInfos;
     }
 }

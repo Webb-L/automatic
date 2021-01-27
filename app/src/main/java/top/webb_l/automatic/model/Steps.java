@@ -1,19 +1,12 @@
-package top.webb_l.automatic.data;
+package top.webb_l.automatic.model;
 
-/**
- * @author Webb
- */
-public class StepInfo {
+import org.litepal.crud.LitePalSupport;
+
+public class Steps extends LitePalSupport {
     private boolean searchType;
     private String searchContent;
     private int id, event, control;
-
-    public StepInfo(boolean searchType, String searchContent, int event, int control) {
-        this.searchType = searchType;
-        this.searchContent = searchContent;
-        this.event = event;
-        this.control = control;
-    }
+    private Scripts script;
 
     public boolean isSearchType() {
         return searchType;
@@ -39,6 +32,14 @@ public class StepInfo {
         this.id = id;
     }
 
+    public int getEvent() {
+        return event;
+    }
+
+    public void setEvent(int event) {
+        this.event = event;
+    }
+
     public int getControl() {
         return control;
     }
@@ -47,11 +48,11 @@ public class StepInfo {
         this.control = control;
     }
 
-    public int getEvent() {
-        return event;
+    public Scripts getScript() {
+        return script;
     }
 
-    public void setEvent(int event) {
-        this.event = event;
+    public void setScript(Scripts script) {
+        this.script = script;
     }
 }

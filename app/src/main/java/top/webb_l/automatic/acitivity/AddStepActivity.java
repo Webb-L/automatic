@@ -29,12 +29,17 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.AddStepAdapter;
 import top.webb_l.automatic.data.ScriptInfo;
 import top.webb_l.automatic.data.StepInfo;
+import top.webb_l.automatic.model.Scripts;
+import top.webb_l.automatic.model.Steps;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
@@ -44,6 +49,10 @@ public class AddStepActivity extends AppCompatActivity {
     private CoordinatorLayout addStepBackdrop;
     private ExtendedFloatingActionButton saveStep;
     private ArrayList<StepInfo> stepInfos = new ArrayList<>();
+    private boolean searchType;
+    private int checkEvent = -1,
+            searchControl = -1;
+    private String packageName, activityName;
 
 
     @SuppressLint("HandlerLeak")
@@ -60,10 +69,6 @@ public class AddStepActivity extends AppCompatActivity {
         }
 
     };
-    private boolean searchType;
-    private int checkEvent = -1,
-            searchControl = -1;
-    private String packageName, activityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,21 +85,30 @@ public class AddStepActivity extends AppCompatActivity {
 
     private void initData() {
         Intent intent = getIntent();
+        int scriptId = intent.getIntExtra("scriptId", 0);
+        if (scriptId > 0) {
+            List<Steps> steps = LitePal.where("id = ?", String.valueOf(scriptId)).find(Steps.class);
+            for (Steps step : steps) {
+                StepInfo stepInfo = new StepInfo(step.isSearchType(), step.getSearchContent(), step.getEvent(), step.getControl());
+                stepInfo.setId(step.getId());
+                stepInfos.add(stepInfo);
+            }
+        }
         packageName = intent.getStringExtra("packageName");
         activityName = intent.getStringExtra("activity");
     }
+
     private void initView() {
         setTitle("添加步骤");
         CoordinatorLayout root = findViewById(R.id.root);
         RecyclerView recyclerView = findViewById(R.id.rv_data);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         AddStepAdapter adapter = new AddStepAdapter();
+        adapter.setStep(stepInfos);
         recyclerView.setAdapter(adapter);
-
         addStep = findViewById(R.id.add_step);
         saveStep = findViewById(R.id.save_step);
         addStepBackdrop = findViewById(R.id.add_step_backdrop);
-
         // 保存全部步骤。
         saveAllStep(root);
         // 处理添加步骤控件显示可以隐藏
@@ -118,7 +132,7 @@ public class AddStepActivity extends AppCompatActivity {
                 return;
             }
             stepInfos.add(new StepInfo(searchType, search, checkEvent, searchControl));
-            adapter.addStep(stepInfos);
+            adapter.setStep(stepInfos);
             adapter.notifyDataSetChanged();
             searchContent.setText("");
             addStepBackdrop.setVisibility(View.GONE);
@@ -128,6 +142,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     /**
      * 选择事件
+     *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
     private void selectEvents(CoordinatorLayout root) {
@@ -155,6 +170,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     /**
      * 选择需要搜索的控件。
+     *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
     private void selectControl(CoordinatorLayout root) {
@@ -188,6 +204,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     /**
      * 选择搜索类型
+     *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
     private void selectSearchType(CoordinatorLayout root) {
@@ -221,6 +238,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     /**
      * 保存全部步骤
+     *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
     private void saveAllStep(CoordinatorLayout root) {
@@ -255,6 +273,23 @@ public class AddStepActivity extends AppCompatActivity {
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                     }
+                    Scripts script = new Scripts();
+                    script.setActivity(activityName);
+                    script.setDescription(saveDescription);
+                    script.setPackageName(packageName);
+                    script.setTitle(saveTitle);
+                    for (StepInfo stepInfo : stepInfos) {
+                        Steps step = new Steps();
+                        step.setControl(stepInfo.getControl());
+                        step.setEvent(stepInfo.getEvent());
+                        step.setSearchContent(stepInfo.getSearchContent());
+                        step.setScript(script);
+                        step.setSearchType(stepInfo.isSearchType());
+                        step.save();
+                        script.getStepIds().add(step);
+                    }
+                    script.save();
+
                     MainActivity.scripts.add(new ScriptInfo(saveTitle, saveDescription, packageName, activityName, icon, stepInfos));
                     MainActivity.mHandler.sendEmptyMessage(1);
                     alertDialog.cancel();
