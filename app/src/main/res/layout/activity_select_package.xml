@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f1f1f1"
     android:fitsSystemWindows="true"
     tools:context=".acitivity.SelectPackageActivity">
 
@@ -35,22 +36,6 @@
 
     <include layout="@layout/content_scrolling" />
 
-    <LinearLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UseCompoundDrawables">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading" />
-    </LinearLayout>
+    <include layout="@layout/content_loading" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

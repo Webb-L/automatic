@@ -1,7 +1,6 @@
 package top.webb_l.automatic.acitivity;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -24,15 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import org.litepal.LitePal;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.PackageNameAdapter;
 import top.webb_l.automatic.data.AppInfo;
-import top.webb_l.automatic.model.Scripts;
 
 public class SelectPackageActivity extends AppCompatActivity {
     private boolean status = false;
@@ -60,23 +56,11 @@ public class SelectPackageActivity extends AppCompatActivity {
             });
         }
     };
-    private int scriptId;
-    private boolean statusEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_package);
-        Intent intent = getIntent();
-        statusEdit = intent.getBooleanExtra("status", false);
-        if (statusEdit) {
-            scriptId = intent.getIntExtra("scriptId", 0);
-            if (scriptId <= 0) {
-                MainActivity.mHandler.sendEmptyMessage(2);
-                finish();
-                return;
-            }
-        }
         initView();
     }
 
@@ -116,13 +100,6 @@ public class SelectPackageActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddStepActivity.class);
             intent.putExtra("packageName", appInfo.getApplicationInfo().packageName);
             intent.putExtra("activity", appInfo.getPackageName());
-            if (statusEdit) {
-                ContentValues values = new ContentValues();
-                values.put("packageName", appInfo.getApplicationInfo().packageName);
-                values.put("activity", appInfo.getPackageName());
-                LitePal.update(Scripts.class, values, scriptId);
-                intent.putExtra("scriptId", scriptId);
-            }
             startActivity(intent);
             finish();
         });

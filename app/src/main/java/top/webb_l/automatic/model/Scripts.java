@@ -1,8 +1,12 @@
 package top.webb_l.automatic.model;
 
+import android.content.ContentValues;
+
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Scripts extends LitePalSupport {
     private int id;
@@ -55,5 +59,13 @@ public class Scripts extends LitePalSupport {
 
     public void setStepIds(ArrayList<Steps> stepIds) {
         this.stepIds = stepIds;
+    }
+
+    public int update(HashMap<String, String> updateData) {
+        ContentValues values = new ContentValues();
+        for (String key : updateData.keySet()) {
+            values.put(key, updateData.get(key));
+        }
+        return LitePal.update(Scripts.class, values, getId());
     }
 }

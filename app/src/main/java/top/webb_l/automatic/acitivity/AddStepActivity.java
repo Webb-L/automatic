@@ -29,14 +29,10 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.litepal.LitePal;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.AddStepAdapter;
-import top.webb_l.automatic.data.ScriptInfo;
 import top.webb_l.automatic.data.StepInfo;
 import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
@@ -85,15 +81,6 @@ public class AddStepActivity extends AppCompatActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        int scriptId = intent.getIntExtra("scriptId", 0);
-        if (scriptId > 0) {
-            List<Steps> steps = LitePal.where("id = ?", String.valueOf(scriptId)).find(Steps.class);
-            for (Steps step : steps) {
-                StepInfo stepInfo = new StepInfo(step.isSearchType(), step.getSearchContent(), step.getEvent(), step.getControl());
-                stepInfo.setId(step.getId());
-                stepInfos.add(stepInfo);
-            }
-        }
         packageName = intent.getStringExtra("packageName");
         activityName = intent.getStringExtra("activity");
     }
@@ -290,7 +277,6 @@ public class AddStepActivity extends AppCompatActivity {
                     }
                     script.save();
 
-                    MainActivity.scripts.add(new ScriptInfo(saveTitle, saveDescription, packageName, activityName, icon, stepInfos));
                     MainActivity.mHandler.sendEmptyMessage(1);
                     alertDialog.cancel();
                     alertDialog.dismiss();

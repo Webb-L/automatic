@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -17,8 +16,8 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 
 import top.webb_l.automatic.R;
+import top.webb_l.automatic.acitivity.EditAutoMaticActivity;
 import top.webb_l.automatic.acitivity.MainActivity;
-import top.webb_l.automatic.acitivity.SelectPackageActivity;
 import top.webb_l.automatic.data.ScriptInfo;
 
 public class AutoMaticAdapter extends RecyclerView.Adapter<AutoMaticAdapter.ViewHolder> {
@@ -48,8 +47,8 @@ public class AutoMaticAdapter extends RecyclerView.Adapter<AutoMaticAdapter.View
             MainActivity.mHandler.sendEmptyMessage(1);
         });
 //        holder.use.setOnClickListener(null);
-        holder.cardRoot.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, SelectPackageActivity.class);
+        holder.editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, EditAutoMaticActivity.class);
             intent.putExtra("scriptId", scriptInfo.getId());
             intent.putExtra("status", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -63,14 +62,13 @@ public class AutoMaticAdapter extends RecyclerView.Adapter<AutoMaticAdapter.View
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        CardView cardRoot;
         ImageView appIcon;
         TextView scriptTitle, scriptDescription;
-        MaterialButton use, delete;
+        MaterialButton use, delete, editButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardRoot = itemView.findViewById(R.id.card);
+            editButton = itemView.findViewById(R.id.edit_button);
             appIcon = itemView.findViewById(R.id.app_icon);
             scriptTitle = itemView.findViewById(R.id.script_title);
             scriptDescription = itemView.findViewById(R.id.script_description);

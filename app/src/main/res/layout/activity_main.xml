@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f1f1f1"
     tools:context=".acitivity.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="30dp">
+            android:paddingBottom="60dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_data"

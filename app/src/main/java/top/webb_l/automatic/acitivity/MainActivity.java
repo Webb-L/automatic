@@ -1,6 +1,7 @@
 package top.webb_l.automatic.acitivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -34,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabAdd;
     private static AutoMaticAdapter autoMaticAdapter;
     private static LinearLayout rootNotData;
-
+    private static Context mContext;
     public static ArrayList<ScriptInfo> scripts = new ArrayList<>();
     private static CoordinatorLayout root;
-
-
+    private static int limit = 5, offset = 0;
     @SuppressLint("HandlerLeak")
     public static final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 1:
+                    getDataBase(limit, offset);
                     if (scripts.size() > 0) {
                         rootNotData.setVisibility(View.GONE);
                     } else {
@@ -65,18 +66,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initData();
+        Connector.getDatabase();
         initView();
         initClicks();
         initRecyclerViewItems();
     }
 
-    private void initData() {
-        Connector.getDatabase();
-        for (Scripts script : LitePal.order("id desc").limit(5).find(Scripts.class)) {
+    private static void getDataBase(int limit, int offset) {
+        for (Scripts script : LitePal.order("id desc").limit(limit).offset(offset).find(Scripts.class)) {
             Drawable icon = null;
             try {
-                icon = getPackageManager().getApplicationIcon(script.getPackageName());
+                icon = mContext.getPackageManager().getApplicationIcon(script.getPackageName());
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -102,10 +102,12 @@ public class MainActivity extends AppCompatActivity {
      * 初始化控件
      */
     private void initView() {
+        mContext = getApplicationContext();
         rootNotData = findViewById(R.id.root_not_data);
         root = findViewById(R.id.root);
         rvData = findViewById(R.id.rv_data);
         fabAdd = findViewById(R.id.fab_add);
+        mHandler.sendEmptyMessage(1);
     }
 
 }

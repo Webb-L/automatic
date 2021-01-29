@@ -12,13 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoAccessibility">
+        <activity android:name=".acitivity.EditAutoMaticActivity"></activity>
         <activity
             android:name=".acitivity.SelectPackageActivity"
             android:label="@string/select_package"
             android:theme="@style/Theme.AutoAccessibility.NoActionBar" />
-        <activity android:name=".acitivity.AddStepActivity" />
-        <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
+        <activity android:name=".acitivity.AddStepActivity" /> <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
         <activity android:name=".Main2Activity" />
+
         <service
             android:name=".service.AutoAccessibilityService"
             android:enabled="true"
