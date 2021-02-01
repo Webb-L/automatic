@@ -18,7 +18,7 @@ import top.webb_l.automatic.data.AppInfo;
 
 public class PackageNameAdapter extends RecyclerView.Adapter<PackageNameAdapter.ViewHolder> {
     private List<AppInfo> apps = null;
-    private Context context;
+    private final Context context;
     private OnItemClickListener onItemClickListener;
 
     public void setApps(List<AppInfo> apps) {

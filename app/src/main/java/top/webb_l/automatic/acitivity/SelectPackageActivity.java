@@ -38,7 +38,7 @@ public class SelectPackageActivity extends AppCompatActivity {
     private List<AppInfo> packageInfoList;
     private LinearLayout loading;
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             loading.setVisibility(View.GONE);
@@ -101,7 +101,6 @@ public class SelectPackageActivity extends AppCompatActivity {
             intent.putExtra("packageName", appInfo.getApplicationInfo().packageName);
             intent.putExtra("activity", appInfo.getPackageName());
             startActivity(intent);
-            finish();
         });
     }
 

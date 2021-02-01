@@ -14,7 +14,7 @@ public class AutoAccessibilityService extends AccessibilityService {
     public static AutoAccessibilityService mService;
     public static String[] findText = null;
     private boolean isNodeList = false;
-    private HashSet<AccessibilityNodeInfo> nodeList = new HashSet<>();
+    private final HashSet<AccessibilityNodeInfo> nodeList = new HashSet<>();
 
     public AutoAccessibilityService() {
     }

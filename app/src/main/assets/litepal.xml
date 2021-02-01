@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="AutoMatic" />
-    <version value="3" />
+    <version value="4" />
     <list>
         <mapping class="top.webb_l.automatic.model.Steps" />
         <mapping class="top.webb_l.automatic.model.Scripts" />

@@ -1,18 +1,22 @@
 package top.webb_l.automatic.model;
 
+import android.content.ContentValues;
+
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
+import java.util.HashMap;
+
 public class Steps extends LitePalSupport {
-    private boolean searchType;
     private String searchContent;
-    private int id, event, control;
+    private int id, searchType, event, control;
     private Scripts script;
 
-    public boolean isSearchType() {
+    public int getSearchType() {
         return searchType;
     }
 
-    public void setSearchType(boolean searchType) {
+    public void setSearchType(int searchType) {
         this.searchType = searchType;
     }
 
@@ -54,5 +58,17 @@ public class Steps extends LitePalSupport {
 
     public void setScript(Scripts script) {
         this.script = script;
+    }
+
+    public Steps find(int id) {
+        return LitePal.find(Steps.class, id);
+    }
+
+    public int update(HashMap<String, String> updateData) {
+        ContentValues values = new ContentValues();
+        for (String key : updateData.keySet()) {
+            values.put(key, updateData.get(key));
+        }
+        return LitePal.update(Steps.class, values, getId());
     }
 }

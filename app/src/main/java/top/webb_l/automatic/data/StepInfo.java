@@ -4,22 +4,21 @@ package top.webb_l.automatic.data;
  * @author Webb
  */
 public class StepInfo {
-    private boolean searchType;
     private String searchContent;
-    private int id, event, control;
+    private int searchType, event, control;
 
-    public StepInfo(boolean searchType, String searchContent, int event, int control) {
-        this.searchType = searchType;
+    public StepInfo(String searchContent, int searchType, int event, int control) {
         this.searchContent = searchContent;
+        this.searchType = searchType;
         this.event = event;
         this.control = control;
     }
 
-    public boolean isSearchType() {
+    public int getSearchType() {
         return searchType;
     }
 
-    public void setSearchType(boolean searchType) {
+    public void setSearchType(int searchType) {
         this.searchType = searchType;
     }
 
@@ -29,14 +28,6 @@ public class StepInfo {
 
     public void setSearchContent(String searchContent) {
         this.searchContent = searchContent;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getControl() {

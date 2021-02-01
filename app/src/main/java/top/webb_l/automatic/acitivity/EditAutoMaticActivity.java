@@ -1,5 +1,6 @@
 package top.webb_l.automatic.acitivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -9,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -32,20 +33,23 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import top.webb_l.automatic.R;
-import top.webb_l.automatic.adapter.AddStepAdapter;
-import top.webb_l.automatic.data.StepInfo;
+import top.webb_l.automatic.adapter.EditStepAdapter;
 import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
 import top.webb_l.automatic.utils.AppInfoUtils;
 
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
+
 public class EditAutoMaticActivity extends AppCompatActivity {
-    private LinearLayout editActivityName, editPackageName;
+    private final String TAG = getClass().getName();
+    private ImageView editPackageName;
     private CoordinatorLayout root;
     private Scripts script;
     private PackageManager packageManager;
     private RecyclerView stepList;
     private TextView tvPackageName, tvActivityName, appName, tvTitle, tvDescription;
     private ImageView appIcon;
+    private EditStepAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,20 @@ public class EditAutoMaticActivity extends AppCompatActivity {
         editScriptInfo();
         addStepInfo();
 
-        LinearLayout selectActivityName = findViewById(R.id.editActivityName);
+        ImageView selectActivityName = findViewById(R.id.editActivityName);
+        selectActivity(appInfoUtils, selectActivityName);
+
+
+        stepList = findViewById(R.id.stepList);
+        stepList.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new EditStepAdapter();
+        stepList.setAdapter(adapter);
+        initStepList(LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class), adapter);
+
+        findViewById(R.id.loading).setVisibility(View.GONE);
+    }
+
+    private void selectActivity(AppInfoUtils appInfoUtils, ImageView selectActivityName) {
         AtomicInteger index = new AtomicInteger();
         selectActivityName.setOnClickListener(v -> {
             String[] activities = appInfoUtils.getActivities((String) this.tvPackageName.getText());
@@ -115,15 +132,8 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                         setActivityName(activity);
                         tvActivityName.setTextColor(this.tvPackageName.getTextColors());
                     })
-                    .create()
                     .show();
         });
-
-
-        stepList = findViewById(R.id.stepList);
-        initStepList(stepList, LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class));
-
-        findViewById(R.id.loading).setVisibility(View.GONE);
     }
 
     private void setScriptDescription(String description) {
@@ -154,18 +164,107 @@ public class EditAutoMaticActivity extends AppCompatActivity {
     /**
      * 添加步骤。
      */
+    @SuppressLint("NonConstantResourceId")
     private void addStepInfo() {
         MaterialButton addStep = findViewById(R.id.add_step);
-        View addStepDialog = View.inflate(this, R.layout.add_step_dialog, null);
         addStep.setOnClickListener(v -> {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle("添加步骤")
-                    .setView(addStepDialog)
-                    .setNegativeButton(getResources().getString(android.R.string.cancel), null)
+            View view = View.inflate(this, R.layout.add_step_dialog, null);
+            AtomicInteger type = new AtomicInteger(), control = new AtomicInteger(), event = new AtomicInteger();
+            ChipGroup searchType = view.findViewById(R.id.chip_search);
+            EditText searchContent = view.findViewById(R.id.search_content);
+            ChipGroup controlGroup = view.findViewById(R.id.chip_control);
+            ChipGroup eventGroup = view.findViewById(R.id.chip_event);
+
+            searchType.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.chip_content:
+                        type.set(1);
+                        break;
+                    case R.id.chip_id:
+                        type.set(2);
+                        break;
+                    default:
+                        type.set(0);
+                        Snackbar.make(root, "请选择搜索类型！", Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
+            });
+            controlGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.chip_button:
+                        control.set(1);
+                        break;
+                    case R.id.chip_image:
+                        control.set(2);
+                        break;
+                    case R.id.chip_text:
+                        control.set(3);
+                        break;
+                    case R.id.chip_radiobutton:
+                        control.set(4);
+                        break;
+                    case R.id.chip_checkbox:
+                        control.set(5);
+                        break;
+                    case R.id.chip_editText:
+                        control.set(6);
+                        break;
+                    default:
+                        control.set(0);
+                        Snackbar.make(root, "请选择控件！", Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
+            });
+            eventGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.chip_check:
+                        event.set(1);
+                        break;
+                    case R.id.chip_press:
+                        event.set(2);
+                        break;
+                    case R.id.chip_copy:
+                        event.set(3);
+                        break;
+                    case R.id.chip_paste:
+                        event.set(4);
+                        break;
+                    default:
+                        event.set(0);
+                        Snackbar.make(root, "请选择事件！", Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
+            });
+
+            AlertDialog builder = new MaterialAlertDialogBuilder(this)
+                    .setTitle("添加步骤")
+                    .setView(view)
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
                     .setPositiveButton(getResources().getString(android.R.string.ok), null)
                     .setCancelable(false)
-                    .create()
-                    .show();
+                    .create();
+            builder.setOnShowListener(dialog -> {
+                builder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
+                    String content = searchContent.getText().toString();
+                    if (type.get() == 0 || control.get() == 0 || event.get() == 0 || TextUtils.isEmpty(content)) {
+                        Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Steps step = new Steps();
+                    step.setScript(script);
+                    step.setSearchType(type.get());
+                    step.setSearchContent(content);
+                    step.setControl(control.get());
+                    step.setEvent(event.get());
+                    step.save();
+                    List<Steps> steps = LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class);
+                    initStepList(steps, adapter);
+                    adapter.notifyItemChanged(steps.size());
+                    dialog.cancel();
+                });
+            });
+            builder.show();
         });
     }
 
@@ -247,19 +346,13 @@ public class EditAutoMaticActivity extends AppCompatActivity {
     /**
      * 初始化步骤列表。
      *
-     * @param stepList 用来渲染数据 RecyclerView
-     * @param steps    步骤列表 List<Steps>
+     * @param steps   步骤列表 List<Steps>
+     * @param adapter
      */
-    private void initStepList(RecyclerView stepList, List<Steps> steps) {
-        ArrayList<StepInfo> stepInfos = new ArrayList<>();
-        for (Steps step : steps) {
-            StepInfo stepInfo = new StepInfo(step.isSearchType(), step.getSearchContent(), step.getEvent(), step.getControl());
-            stepInfos.add(stepInfo);
-        }
-        stepList.setLayoutManager(new LinearLayoutManager(this));
-        AddStepAdapter adapter = new AddStepAdapter();
-        adapter.setStep(stepInfos);
-        stepList.setAdapter(adapter);
+    private void initStepList(List<Steps> steps, EditStepAdapter adapter) {
+        ArrayList<Steps> stepArray = new ArrayList<>();
+        stepArray.addAll(steps);
+        adapter.setStep(stepArray);
     }
 
 

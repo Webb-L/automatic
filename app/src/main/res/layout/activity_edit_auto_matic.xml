@@ -50,7 +50,6 @@
                             android:textAppearance="?attr/textAppearanceHeadline6" />
 
                         <LinearLayout
-                            android:id="@+id/editPackageName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -66,6 +65,7 @@
                                 android:textColor="?android:attr/textColorSecondary" />
 
                             <ImageView
+                                android:id="@+id/editPackageName"
                                 style="?attr/borderlessButtonStyle"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
@@ -73,7 +73,6 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/editActivityName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -90,6 +89,7 @@
 
 
                             <ImageView
+                                android:id="@+id/editActivityName"
                                 style="?attr/borderlessButtonStyle"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
@@ -185,5 +185,5 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <include layout="@layout/content_loading" />
+        <include layout="@layout/content_loading" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

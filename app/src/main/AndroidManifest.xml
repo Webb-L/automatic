@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoAccessibility">
-        <activity android:name=".acitivity.EditAutoMaticActivity"></activity>
+        <activity android:name=".acitivity.UseScriptActivity"></activity>
+        <activity android:name=".acitivity.EditAutoMaticActivity" />
         <activity
             android:name=".acitivity.SelectPackageActivity"
             android:label="@string/select_package"
