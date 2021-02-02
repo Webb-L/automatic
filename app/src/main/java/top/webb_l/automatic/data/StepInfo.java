@@ -4,14 +4,23 @@ package top.webb_l.automatic.data;
  * @author Webb
  */
 public class StepInfo {
-    private String searchContent;
+    private String searchContent,pasteContent;
     private int searchType, event, control;
 
-    public StepInfo(String searchContent, int searchType, int event, int control) {
+    public StepInfo(String searchContent, String pasteContent, int searchType, int event, int control) {
         this.searchContent = searchContent;
+        this.pasteContent = pasteContent;
         this.searchType = searchType;
         this.event = event;
         this.control = control;
+    }
+
+    public String getPasteContent() {
+        return pasteContent;
+    }
+
+    public void setPasteContent(String pasteContent) {
+        this.pasteContent = pasteContent;
     }
 
     public int getSearchType() {

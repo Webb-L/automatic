@@ -174,6 +174,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
             EditText searchContent = view.findViewById(R.id.search_content);
             ChipGroup controlGroup = view.findViewById(R.id.chip_control);
             ChipGroup eventGroup = view.findViewById(R.id.chip_event);
+            EditText pasteContent = view.findViewById(R.id.paste_content);
 
             searchType.setOnCheckedChangeListener((group, checkedId) -> {
                 switch (checkedId) {
@@ -216,6 +217,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                 }
             });
             eventGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                view.findViewById(R.id.paste_card).setVisibility(View.GONE);
                 switch (checkedId) {
                     case R.id.chip_check:
                         event.set(1);
@@ -228,6 +230,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                         break;
                     case R.id.chip_paste:
                         event.set(4);
+                        view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
                         break;
                     default:
                         event.set(0);
@@ -246,6 +249,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
             builder.setOnShowListener(dialog -> {
                 builder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
                     String content = searchContent.getText().toString();
+                    String paste = pasteContent.getText().toString();
                     if (type.get() == 0 || control.get() == 0 || event.get() == 0 || TextUtils.isEmpty(content)) {
                         Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
                         return;
@@ -257,6 +261,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                     step.setSearchContent(content);
                     step.setControl(control.get());
                     step.setEvent(event.get());
+                    step.setPasteContent(paste);
                     step.save();
                     List<Steps> steps = LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class);
                     initStepList(steps, adapter);

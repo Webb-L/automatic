@@ -89,21 +89,33 @@ public class AddStepActivity extends AppCompatActivity {
         selectControl(root);
         // 选择事件
         selectEvents(root);
-        // 校验数据是否正常
+        // 添加步骤
+        addStep(root, adapter);
+
+    }
+
+    /**
+     * 校验数据并添加数据
+     *
+     * @param root    给Snackbar用来提示。
+     * @param adapter 用来更新数据。
+     */
+    private void addStep(CoordinatorLayout root, AddStepAdapter adapter) {
         EditText searchContent = findViewById(R.id.search_content);
         saveStep.setOnClickListener(v -> {
             String search = searchContent.getText().toString();
+            EditText pasteContent = findViewById(R.id.paste_content);
+            String paste = pasteContent.getText().toString();
             if (searchType.get() == 0 || searchControl.get() == 0 || checkEvent.get() == 0 || TextUtils.isEmpty(search)) {
                 Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
                 return;
             }
-            stepInfo.add(new StepInfo(search, searchType.get(), checkEvent.get(), searchControl.get()));
+            stepInfo.add(new StepInfo(search, paste, searchType.get(), checkEvent.get(), searchControl.get()));
             adapter.setStep(stepInfo);
             adapter.notifyDataSetChanged();
             searchContent.setText("");
             addStepBackdrop.setVisibility(View.GONE);
         });
-
     }
 
     /**
@@ -114,6 +126,7 @@ public class AddStepActivity extends AppCompatActivity {
     private void selectEvents(CoordinatorLayout root) {
         ChipGroup chipEvent = findViewById(R.id.chip_event);
         chipEvent.setOnCheckedChangeListener((group, checkedId) -> {
+            findViewById(R.id.paste_content_card).setVisibility(View.GONE);
             switch (checkedId) {
                 case R.id.chip_check:
                     checkEvent.set(1);
@@ -126,6 +139,7 @@ public class AddStepActivity extends AppCompatActivity {
                     break;
                 case R.id.chip_paste:
                     checkEvent.set(4);
+                    findViewById(R.id.paste_content_card).setVisibility(View.VISIBLE);
                     break;
                 default:
                     checkEvent.set(0);
@@ -257,6 +271,7 @@ public class AddStepActivity extends AppCompatActivity {
                         step.setControl(stepInfo.getControl());
                         step.setEvent(stepInfo.getEvent());
                         step.setSearchContent(stepInfo.getSearchContent());
+                        step.setPasteContent(stepInfo.getPasteContent());
                         step.setScript(script);
                         step.setSearchType(stepInfo.getSearchType());
                         step.save();
@@ -295,7 +310,7 @@ public class AddStepActivity extends AppCompatActivity {
                     .setCancelable(true)
                     .create()
                     .show();
-        }else {
+        } else {
             finish();
         }
     }

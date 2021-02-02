@@ -147,6 +147,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
         EditText searchContent = view.findViewById(R.id.search_content);
         ChipGroup controlGroup = view.findViewById(R.id.chip_control);
         ChipGroup eventGroup = view.findViewById(R.id.chip_event);
+        EditText pasteContent = view.findViewById(R.id.paste_content);
 
         Chip typeChip = (Chip) searchType.getChildAt(data.getSearchType() - 1);
         typeChip.setChecked(true);
@@ -154,7 +155,11 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
         Chip controlChip = (Chip) controlGroup.getChildAt(data.getControl() - 1);
         controlChip.setChecked(true);
         Chip eventChip = (Chip) eventGroup.getChildAt(data.getEvent() - 1);
+        if (data.getEvent() == 4) {
+            view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
+        }
         eventChip.setChecked(true);
+        pasteContent.setText(data.getPasteContent());
 
         AlertDialog builder = new MaterialAlertDialogBuilder(context)
                 .setTitle("编辑" + stepName)
@@ -210,6 +215,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
                 }
             });
             eventGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                view.findViewById(R.id.paste_card).setVisibility(View.GONE);
                 switch (checkedId) {
                     case R.id.chip_check:
                         event.set(1);
@@ -222,6 +228,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
                         break;
                     case R.id.chip_paste:
                         event.set(4);
+                        view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
                         break;
                     default:
                         event.set(0);
@@ -232,6 +239,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
 
             builder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
                 String content = searchContent.getText().toString();
+                String paste = pasteContent.getText().toString();
                 if (type.get() == 0 || control.get() == 0 || event.get() == 0 || TextUtils.isEmpty(content)) {
                     Toast.makeText(context, "请确保所有内容都填写完成！", Toast.LENGTH_SHORT).show();
                     return;
@@ -240,6 +248,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
                 data.setSearchContent(content);
                 data.setControl(control.get());
                 data.setEvent(event.get());
+                data.setPasteContent(paste);
                 notifyItemChanged(position);
                 dialog.cancel();
             });

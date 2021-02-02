@@ -50,7 +50,7 @@ public class AutoMaticAdapter extends RecyclerView.Adapter<AutoMaticAdapter.View
         holder.delete.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(mContext)
                     .setTitle("危险")
-                    .setMessage("是否需要删除" + scriptInfo.getTitle() + "并且" + scriptInfo.getTitle() + "下的全部步骤，删除后不可挽回。")
+                    .setMessage("是否需要删除《" + scriptInfo.getTitle() + "》并且会删除《" + scriptInfo.getTitle() + "》下的全部步骤，点击确定后不可挽回。")
                     .setNegativeButton(mContext.getResources().getString(android.R.string.cancel), (dialog, which) -> dialog.cancel())
                     .setPositiveButton(mContext.getResources().getString(android.R.string.ok), (dialog, which) -> {
                         LitePal.deleteAll(Steps.class, "scripts_id = ?", String.valueOf(scriptInfo.getId()));
@@ -70,7 +70,7 @@ public class AutoMaticAdapter extends RecyclerView.Adapter<AutoMaticAdapter.View
         });
         holder.use.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, UseScriptActivity.class);
-            intent.putExtra("scriptId",scriptInfo.getId());
+            intent.putExtra("scriptId", scriptInfo.getId());
             mContext.startActivity(intent);
         });
     }

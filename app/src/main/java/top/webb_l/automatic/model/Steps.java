@@ -8,9 +8,17 @@ import org.litepal.crud.LitePalSupport;
 import java.util.HashMap;
 
 public class Steps extends LitePalSupport {
-    private String searchContent;
+    private String searchContent, pasteContent;
     private int id, searchType, event, control;
     private Scripts script;
+
+    public String getPasteContent() {
+        return pasteContent;
+    }
+
+    public void setPasteContent(String pasteContent) {
+        this.pasteContent = pasteContent;
+    }
 
     public int getSearchType() {
         return searchType;

@@ -143,6 +143,7 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
         EditText searchContent = view.findViewById(R.id.search_content);
         ChipGroup controlGroup = view.findViewById(R.id.chip_control);
         ChipGroup eventGroup = view.findViewById(R.id.chip_event);
+        EditText pasteContent = view.findViewById(R.id.paste_content);
 
         Chip typeChip = (Chip) searchType.getChildAt(data.getSearchType() - 1);
         typeChip.setChecked(true);
@@ -151,6 +152,11 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
         controlChip.setChecked(true);
         Chip eventChip = (Chip) eventGroup.getChildAt(data.getEvent() - 1);
         eventChip.setChecked(true);
+        pasteContent.setText(data.getPasteContent());
+
+        if (data.getEvent() == 4) {
+            view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
+        }
 
         AlertDialog builder = new MaterialAlertDialogBuilder(context)
                 .setTitle("编辑" + stepName)
@@ -205,6 +211,7 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
                 }
             });
             eventGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                view.findViewById(R.id.paste_card).setVisibility(View.GONE);
                 switch (checkedId) {
                     case R.id.chip_check:
                         event.set(1);
@@ -217,6 +224,7 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
                         break;
                     case R.id.chip_paste:
                         event.set(4);
+                        view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
                         break;
                     default:
                         event.set(0);
@@ -227,6 +235,7 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
 
             builder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v1 -> {
                 String content = searchContent.getText().toString();
+                String paste = pasteContent.getText().toString();
                 if (type.get() == 0 || control.get() == 0 || event.get() == 0 || TextUtils.isEmpty(content)) {
                     Toast.makeText(context, "请确保所有内容都填写完成！", Toast.LENGTH_SHORT).show();
                     return;
@@ -236,7 +245,9 @@ public class EditStepAdapter extends RecyclerView.Adapter<EditStepAdapter.ViewHo
                 stringHashMap.put("searchContent", content);
                 stringHashMap.put("control", String.valueOf(control.get()));
                 stringHashMap.put("event", String.valueOf(event.get()));
+                stringHashMap.put("pasteContent", paste);
                 data.update(stringHashMap);
+
                 stepInfos.set(position, LitePal.find(Steps.class, id));
                 notifyItemChanged(position);
                 dialog.cancel();
