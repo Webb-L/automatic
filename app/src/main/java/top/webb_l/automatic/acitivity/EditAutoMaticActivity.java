@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +52,13 @@ public class EditAutoMaticActivity extends AppCompatActivity {
     private TextView tvPackageName, tvActivityName, appName, tvTitle, tvDescription;
     private ImageView appIcon;
     private EditStepAdapter adapter;
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            initView();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +70,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_edit_auto_matic);
         initData();
-        initView();
+        mHandler.sendEmptyMessage(1);
     }
 
     /**
@@ -112,7 +121,6 @@ public class EditAutoMaticActivity extends AppCompatActivity {
         adapter = new EditStepAdapter();
         stepList.setAdapter(adapter);
         initStepList(LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class), adapter);
-
         findViewById(R.id.loading).setVisibility(View.GONE);
     }
 

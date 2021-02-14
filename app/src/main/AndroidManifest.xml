@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
@@ -12,14 +13,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoAccessibility">
-        <activity android:name=".acitivity.UseScriptActivity"></activity>
-        <activity android:name=".acitivity.EditAutoMaticActivity" />
+        <activity
+            android:name=".acitivity.UseScriptActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".acitivity.EditAutoMaticActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".acitivity.SelectPackageActivity"
             android:label="@string/select_package"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AutoAccessibility.NoActionBar" />
-        <activity android:name=".acitivity.AddStepActivity" /> <!-- <activity android:name=".acitivity.Main2Activity"></activity> -->
-        <activity android:name=".Main2Activity" />
+        <activity
+            android:name=".acitivity.AddStepActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Main2Activity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.AutoAccessibilityService"
@@ -36,7 +46,9 @@
                 android:resource="@xml/auto_accessibility_service_config" />
         </service>
 
-        <activity android:name=".acitivity.MainActivity">
+        <activity
+            android:name=".acitivity.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

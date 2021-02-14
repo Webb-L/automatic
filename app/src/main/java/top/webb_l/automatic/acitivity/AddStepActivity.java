@@ -43,10 +43,9 @@ public class AddStepActivity extends AppCompatActivity {
     private CoordinatorLayout addStepBackdrop;
     private ExtendedFloatingActionButton saveStep;
     private final ArrayList<StepInfo> stepInfo = new ArrayList<>();
-    private final AtomicInteger
-            searchType = new AtomicInteger();
-    private final AtomicInteger checkEvent = new AtomicInteger();
-    private final AtomicInteger searchControl = new AtomicInteger();
+    private final AtomicInteger searchType = new AtomicInteger(),
+            checkEvent = new AtomicInteger(),
+            searchControl = new AtomicInteger();
     private String packageName, activityName;
     private CoordinatorLayout root;
 
@@ -92,7 +91,6 @@ public class AddStepActivity extends AppCompatActivity {
         selectEvents(root);
         // 添加步骤
         addStep(root, adapter);
-
     }
 
     /**
