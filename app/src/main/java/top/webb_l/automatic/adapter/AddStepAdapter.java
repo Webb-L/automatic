@@ -101,7 +101,7 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
                 switch (stepInfo.getControl()) {
                     case 1:
                         Button button = new Button(holder.stepControl.getContext());
-                        button.setText(R.string.chip_button);
+                        button.setText(stepInfo.getSearchContent());
                         holder.stepControl.addView(button);
                         break;
                     case 2:
@@ -111,22 +111,22 @@ public class AddStepAdapter extends RecyclerView.Adapter<AddStepAdapter.ViewHold
                         break;
                     case 3:
                         TextView text = new TextView(holder.stepControl.getContext());
-                        text.setText(R.string.chip_text);
+                        text.setText(stepInfo.getSearchContent());
                         holder.stepControl.addView(text);
                         break;
                     case 4:
                         RadioButton radioButton = new RadioButton(holder.stepControl.getContext());
-                        radioButton.setText(R.string.chip_radiobutton);
+                        radioButton.setText(stepInfo.getSearchContent());
                         holder.stepControl.addView(radioButton);
                         break;
                     case 5:
                         CheckBox checkBox = new CheckBox(holder.stepControl.getContext());
-                        checkBox.setText(R.string.chip_checkbox);
+                        checkBox.setText(stepInfo.getSearchContent());
                         holder.stepControl.addView(checkBox);
                         break;
                     case 6:
                         EditText editText = new EditText(holder.stepControl.getContext());
-                        editText.setText(R.string.chip_editText);
+                        editText.setText(stepInfo.getSearchContent());
                         holder.stepControl.addView(editText);
                         break;
                     default:

@@ -5,5 +5,4 @@
     android:accessibilityFlags="flagIncludeNotImportantViews"
     android:canPerformGestures="true"
     android:canRetrieveWindowContent="true"
-    android:description="@string/AccessibilityDescription"
-    android:packageNames="com.wisedu.cpdaily" />
+    android:description="@string/AccessibilityDescription" />

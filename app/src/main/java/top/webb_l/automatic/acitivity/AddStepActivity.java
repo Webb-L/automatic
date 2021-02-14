@@ -48,6 +48,7 @@ public class AddStepActivity extends AppCompatActivity {
     private final AtomicInteger checkEvent = new AtomicInteger();
     private final AtomicInteger searchControl = new AtomicInteger();
     private String packageName, activityName;
+    private CoordinatorLayout root;
 
 
     @Override
@@ -71,7 +72,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     private void initView() {
         setTitle("添加步骤");
-        CoordinatorLayout root = findViewById(R.id.root);
+        root = findViewById(R.id.root);
         RecyclerView recyclerView = findViewById(R.id.rv_data);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         AddStepAdapter adapter = new AddStepAdapter();
@@ -289,30 +290,21 @@ public class AddStepActivity extends AppCompatActivity {
     }
 
 
+    private void returnPrompt() {
+        if (stepInfo.size() > 0) {
+            Snackbar.make(root, "你的数据没有保存，是否强制退出。", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, v -> finish()).show();
+        } else {
+            finish();
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             returnPrompt();
+            return false;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void returnPrompt() {
-        if (stepInfo.size() > 0) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("警告")
-                    .setMessage("你的数据没有保存，是否强制退出。")
-                    .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> dialog.cancel())
-                    .setPositiveButton(getResources().getString(android.R.string.ok), (dialog, which) -> {
-                        dialog.dismiss();
-                        finish();
-                    })
-                    .setCancelable(true)
-                    .create()
-                    .show();
-        } else {
-            finish();
-        }
     }
 
     @Override
@@ -320,7 +312,7 @@ public class AddStepActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 returnPrompt();
-                return true;
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }

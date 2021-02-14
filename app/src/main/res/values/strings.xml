@@ -130,4 +130,5 @@
     <string name="edit">编辑</string>
     <string name="add">添加</string>
     <string name="paste_prompt">要粘贴的内容：</string>
+    <string name="open">打开</string>
 </resources>

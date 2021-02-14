@@ -1,7 +1,5 @@
 package top.webb_l.automatic;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import top.webb_l.automatic.service.AutoAccessibilityService;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -28,7 +26,6 @@ public class Main2Activity extends AppCompatActivity {
         btCheckInput = findViewById(R.id.bt_checkInput);
 
 
-        serviceStatus.setChecked(AutoAccessibilityService.isStatus());
         serviceStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 try {
@@ -48,7 +45,7 @@ public class Main2Activity extends AppCompatActivity {
             }
             serviceStatus.setClickable(true);
             serviceStatus.setTextColor(getColor(R.color.black));
-            AutoAccessibilityService.findText = texts.split("/");
+//            AutoAccessibilityService.findText = texts.split("/");
         });
 
 
@@ -57,6 +54,5 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        serviceStatus.setChecked(AutoAccessibilityService.isStatus());
     }
 }

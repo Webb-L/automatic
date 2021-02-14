@@ -3,7 +3,7 @@
     package="top.webb_l.automatic">
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
