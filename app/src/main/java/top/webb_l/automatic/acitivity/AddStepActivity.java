@@ -61,6 +61,14 @@ public class AddStepActivity extends AppCompatActivity {
         }
         initData();
         initView();
+/*        NewbieGuide.with(this)
+                .setLabel("addStep")
+                .alwaysShow(true)
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(addStep, new RelativeGuide(R.layout.newbieguide_add_step_prompt, Gravity.BOTTOM, 100))
+                        .setLayoutRes(R.layout.activity_add_step, R.id.add_step)
+                        .setEverywhereCancelable(false))
+                .show();*/
     }
 
     private void initData() {

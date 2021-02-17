@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.litepal.LitePal;
 import org.litepal.tablemanager.Connector;
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initClicks();
         initRecyclerViewItems();
+
     }
 
     private void getDataBase() {
@@ -64,6 +71,18 @@ public class MainActivity extends AppCompatActivity {
         fabAdd.setOnClickListener(v -> {
             startActivity(new Intent(this, SelectPackageActivity.class));
         });
+        BottomAppBar bar = findViewById(R.id.bar);
+        bar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.search_automatic:
+                    CoordinatorLayout root = findViewById(R.id.root);
+                    Snackbar.make(root, "不要点我啦，我还小暂时不能帮到你。", Snackbar.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
     }
 
     private void initRecyclerViewItems() {
@@ -82,6 +101,25 @@ public class MainActivity extends AppCompatActivity {
         fabAdd = findViewById(R.id.fab_add);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intent = new Intent(this, OpenWebActivity.class);
+                intent.putExtra("url", "http://121.4.250.193/");
+                startActivity(intent);
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
 
     @Override
     protected void onRestart() {

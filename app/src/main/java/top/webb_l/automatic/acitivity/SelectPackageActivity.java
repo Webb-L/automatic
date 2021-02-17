@@ -115,9 +115,9 @@ public class SelectPackageActivity extends AppCompatActivity {
         for (ActivityInfo activity : appInfo.getApplicationInfo().activities) {
             appInfos.add(
                     new AppInfo(
-                            appInfo.getName(),
+                            activity.loadLabel(getPackageManager()).toString(),
                             activity.name.replace(appInfo.getPackageName(), ""),
-                            appInfo.getIcon(),
+                            activity.loadIcon(getPackageManager()),
                             appInfo.getApplicationInfo()
                     ));
         }
