@@ -1,12 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">自动操作</string>
     <string name="AccessibilityDescription">获取你的页面内容并检查是否有你设置的选项。</string>
-    <string name="step1">1.设置要选择的文本</string>
-    <string name="step2">1.设置要选择的文本</string>
     <string name="serviceStatus">服务状态：</string>
-    <string name="hintText">请用“/”隔开要选择的文字。</string>
-    <string name="promptText">如：“无不良病状/无不良病状/一致，未离开昨天所在地区”</string>
-    <string name="inputText">检测输入的内容</string>
     <string name="main_create_automatic">创建自动操作</string>
     <string name="add_step_button">步骤</string>
     <string name="chip_button">按钮</string>
@@ -37,7 +32,6 @@
     <string name="save_all_step_description">描述</string>
     <string name="use">使用</string>
     <string name="delete">删除</string>
-    <string name="edit">编辑</string>
     <string name="add">添加</string>
     <string name="paste_prompt">要粘贴的内容：</string>
     <string name="open">打开</string>
@@ -48,4 +42,20 @@
     <string name="help">帮助</string>
     <string name="home">首页</string>
     <string name="openWeb">打开网页</string>
+    <string name="form_null">请确保所有内容都填写完成！</string>
+    <string name="select_event">请选择事件！</string>
+    <string name="select_control_prompt">请选择控件！</string>
+    <string name="select_search_type_prompt">请选择搜索类型！</string>
+    <string name="no_add_step">你还没添加有步骤！</string>
+    <string name="save_step">保存步骤</string>
+    <string name="save_step_null">请确保保存步骤所有内容都填写完成！</string>
+    <string name="data_no_save_cancel">你的数据没有保存，是否强制退出。</string>
+    <string name="no_open_help_document">无法打开帮助文档！</string>
+    <string name="parameter_error">参数错误！</string>
+    <string name="jump_abnormal">跳转异常！</string>
+    <string name="step">步骤</string>
+    <string name="edit">编辑</string>
+    <string name="package_update_prompt">请更新红色字体的内容，如果不更新会导致无法使用。</string>
+    <string name="danger">危险</string>
+    <string name="successfully">成功！</string>
 </resources>

@@ -1,4 +1,4 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -39,16 +39,18 @@ import top.webb_l.automatic.adapter.EditStepAdapter;
 import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
 import top.webb_l.automatic.utils.AppInfoUtils;
+import top.webb_l.automatic.utils.StepSearchInfoUtils;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
-public class EditAutoMaticActivity extends AppCompatActivity {
+/**
+ * @author Webb
+ */
+public class EditScriptActivity extends AppCompatActivity {
     private final String TAG = getClass().getName();
-    private ImageView editPackageName;
     private CoordinatorLayout root;
     private Scripts script;
     private PackageManager packageManager;
-    private RecyclerView stepList;
     private TextView tvPackageName, tvActivityName, appName, tvTitle, tvDescription;
     private ImageView appIcon;
     private EditStepAdapter adapter;
@@ -80,7 +82,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int scriptId = intent.getIntExtra("scriptId", 0);
         if (scriptId < 0) {
-            Snackbar.make(root, "参数错误", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(root, getString(R.string.parameter_error), Snackbar.LENGTH_LONG).show();
             return;
         }
         script = LitePal.find(Scripts.class, scriptId);
@@ -116,9 +118,9 @@ public class EditAutoMaticActivity extends AppCompatActivity {
         selectActivity(appInfoUtils, selectActivityName);
 
 
-        stepList = findViewById(R.id.stepList);
+        RecyclerView stepList = findViewById(R.id.stepList);
         stepList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EditStepAdapter();
+        adapter = new EditStepAdapter(root);
         stepList.setAdapter(adapter);
         initStepList(LitePal.where("scripts_id = ?", String.valueOf(script.getId())).find(Steps.class), adapter);
         findViewById(R.id.loading).setVisibility(View.GONE);
@@ -185,70 +187,18 @@ public class EditAutoMaticActivity extends AppCompatActivity {
             EditText pasteContent = view.findViewById(R.id.paste_content);
 
             searchType.setOnCheckedChangeListener((group, checkedId) -> {
-                switch (checkedId) {
-                    case R.id.chip_content:
-                        type.set(1);
-                        break;
-                    case R.id.chip_id:
-                        type.set(2);
-                        break;
-                    default:
-                        type.set(0);
-                        Snackbar.make(root, "请选择搜索类型！", Snackbar.LENGTH_SHORT).show();
-                        break;
-                }
+                type.set(StepSearchInfoUtils.getSearchType(root, this, checkedId));
             });
             controlGroup.setOnCheckedChangeListener((group, checkedId) -> {
-                switch (checkedId) {
-                    case R.id.chip_button:
-                        control.set(1);
-                        break;
-                    case R.id.chip_image:
-                        control.set(2);
-                        break;
-                    case R.id.chip_text:
-                        control.set(3);
-                        break;
-                    case R.id.chip_radiobutton:
-                        control.set(4);
-                        break;
-                    case R.id.chip_checkbox:
-                        control.set(5);
-                        break;
-                    case R.id.chip_editText:
-                        control.set(6);
-                        break;
-                    default:
-                        control.set(0);
-                        Snackbar.make(root, "请选择控件！", Snackbar.LENGTH_SHORT).show();
-                        break;
-                }
+                control.set(StepSearchInfoUtils.getControl(root, this, checkedId));
             });
             eventGroup.setOnCheckedChangeListener((group, checkedId) -> {
                 view.findViewById(R.id.paste_card).setVisibility(View.GONE);
-                switch (checkedId) {
-                    case R.id.chip_check:
-                        event.set(1);
-                        break;
-                    case R.id.chip_press:
-                        event.set(2);
-                        break;
-                    case R.id.chip_copy:
-                        event.set(3);
-                        break;
-                    case R.id.chip_paste:
-                        event.set(4);
-                        view.findViewById(R.id.paste_card).setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        event.set(0);
-                        Snackbar.make(root, "请选择事件！", Snackbar.LENGTH_SHORT).show();
-                        break;
-                }
+                event.set(StepSearchInfoUtils.getEvent(root, view, this, checkedId));
             });
 
             AlertDialog builder = new MaterialAlertDialogBuilder(this)
-                    .setTitle("添加步骤")
+                    .setTitle(R.string.add_step)
                     .setView(view)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
                     .setPositiveButton(getResources().getString(android.R.string.ok), null)
@@ -259,7 +209,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                     String content = searchContent.getText().toString();
                     String paste = pasteContent.getText().toString();
                     if (type.get() == 0 || control.get() == 0 || event.get() == 0 || TextUtils.isEmpty(content)) {
-                        Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
+                        Snackbar.make(root, getString(R.string.form_null), LENGTH_SHORT).show();
                         return;
                     }
 
@@ -293,7 +243,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
             titleScript.setText(script.getTitle());
             descriptionScript.setText(script.getDescription());
             AlertDialog alertDialog = new MaterialAlertDialogBuilder(this)
-                    .setTitle("保存步骤")
+                    .setTitle(getString(R.string.save_step))
                     .setView(layout)
                     .setCancelable(false)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
@@ -305,7 +255,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                     String saveTitle = titleScript.getText().toString().trim();
                     String saveDescription = descriptionScript.getText().toString().trim();
                     if (TextUtils.isEmpty(saveTitle) || TextUtils.isEmpty(saveDescription)) {
-                        Snackbar.make(root, "请确保保存步骤所有内容都填写完成！", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(root, getString(R.string.save_step_null), Snackbar.LENGTH_SHORT).show();
                         return;
                     }
                     HashMap<String, String> stringHashMap = new HashMap<>();
@@ -333,7 +283,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
             String[] info = s.split("/r/");
             AppName.add(info[0]);
         }
-        editPackageName = findViewById(R.id.editPackageName);
+        ImageView editPackageName = findViewById(R.id.editPackageName);
         editPackageName.setOnClickListener(v -> {
             AtomicInteger index = new AtomicInteger();
             new MaterialAlertDialogBuilder(this)
@@ -349,7 +299,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
                         setAppName(packageName);
                         setPackageName(packageName);
                         tvActivityName.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                        Snackbar.make(root, "请更新红色字体的内容，如果不更新会导致无法使用。", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(root, getString(R.string.package_update_prompt), Snackbar.LENGTH_LONG).show();
                     })
                     .create()
                     .show();
@@ -363,8 +313,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
      * @param adapter
      */
     private void initStepList(List<Steps> steps, EditStepAdapter adapter) {
-        ArrayList<Steps> stepArray = new ArrayList<>();
-        stepArray.addAll(steps);
+        ArrayList<Steps> stepArray = new ArrayList<>(steps);
         adapter.setStep(stepArray);
     }
 
@@ -391,7 +340,7 @@ public class EditAutoMaticActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

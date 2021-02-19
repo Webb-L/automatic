@@ -1,4 +1,4 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,12 +23,17 @@ import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
 import top.webb_l.automatic.service.AutoAccessibilityService;
 
+/**
+ * @author Webb
+ */
 public class UseScriptActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getName();
     public static Scripts script;
     public static List<Steps> steps;
+    @SuppressLint("StaticFieldLeak")
     public static EditText scriptLog;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     public Switch serviceStatus;
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
@@ -44,7 +49,7 @@ public class UseScriptActivity extends AppCompatActivity {
         setContentView(R.layout.activity_use_script);
         initData();
         if (script == null || steps == null || steps.size() == 0) {
-            Toast.makeText(this, "参数错误！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.parameter_error), Toast.LENGTH_SHORT).show();
             return;
         }
         initView();
@@ -85,6 +90,7 @@ public class UseScriptActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -95,7 +101,7 @@ public class UseScriptActivity extends AppCompatActivity {
                 try {
                     startActivity(getPackageManager().getLaunchIntentForPackage(script.getPackageName()));
                 } catch (Exception e) {
-                    Toast.makeText(this, "跳转异常！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.jump_abnormal), Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:

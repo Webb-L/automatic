@@ -1,4 +1,4 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +31,13 @@ import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.PackageNameAdapter;
 import top.webb_l.automatic.data.AppInfo;
 
+/**
+ * @author Webb
+ */
 public class SelectPackageActivity extends AppCompatActivity {
     private boolean status = false;
     private RecyclerView activityList;
-    private RecyclerView appInfos;
+    private RecyclerView appList;
     private CollapsingToolbarLayout toolBarLayout;
     private List<AppInfo> packageInfoList;
     private LinearLayout loading;
@@ -41,21 +45,30 @@ public class SelectPackageActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            loading.setVisibility(View.GONE);
-            appInfos.setLayoutManager(new LinearLayoutManager(SelectPackageActivity.this));
-            PackageNameAdapter packageNameAdapter = new PackageNameAdapter(SelectPackageActivity.this);
-            packageInfoList = getPackageInfoList();
-            packageNameAdapter.setApps(packageInfoList);
-            appInfos.setAdapter(packageNameAdapter);
-            toolBarLayout.setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.size() + ")");
-            packageNameAdapter.setOnItemClickListener(packageInfo -> {
-                status = true;
-                ArrayList<AppInfo> activities = getActivitiesByApplication(packageInfo);
-                toolBarLayout.setTitle(getResources().getString(R.string.select_activity) + "(" + activities.size() + ")");
-                showActivityList(activities);
-            });
+            switch (msg.what) {
+                case 0:
+                    loading.setVisibility(View.GONE);
+                    appList.setLayoutManager(new LinearLayoutManager(SelectPackageActivity.this));
+                    PackageNameAdapter packageNameAdapter = new PackageNameAdapter(SelectPackageActivity.this);
+                    packageInfoList = getPackageInfoList();
+                    packageNameAdapter.setApps(packageInfoList);
+                    appList.setAdapter(packageNameAdapter);
+                    toolBarLayout.setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.size() + ")");
+                    packageNameAdapter.setOnItemClickListener(packageInfo -> {
+                        appList.setVisibility(View.GONE);
+                        nestedScrollView.fullScroll(View.FOCUS_UP);
+                        status = true;
+                        ArrayList<AppInfo> activities = getActivitiesByApplication(packageInfo);
+                        toolBarLayout.setTitle(getResources().getString(R.string.select_activity) + "(" + activities.size() + ")");
+                        showActivityList(activities);
+                    });
+                    break;
+                default:
+                    break;
+            }
         }
     };
+    private NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +77,7 @@ public class SelectPackageActivity extends AppCompatActivity {
         initView();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,12 +89,12 @@ public class SelectPackageActivity extends AppCompatActivity {
         toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
-        appInfos = findViewById(R.id.app_list);
+        appList = findViewById(R.id.app_list);
         activityList = findViewById(R.id.activity_list);
 
         loading = findViewById(R.id.loading);
         loading.setOnTouchListener((v, event) -> false);
-
+        nestedScrollView = findViewById(R.id.nestedScrollView);
         mHandler.sendEmptyMessage(0);
     }
 
@@ -90,7 +104,7 @@ public class SelectPackageActivity extends AppCompatActivity {
      * @param activities activity数据 ArrayList<AppInfo>
      */
     private void showActivityList(ArrayList<AppInfo> activities) {
-        appInfos.setVisibility(View.GONE);
+        appList.setVisibility(View.GONE);
         activityList.setVisibility(View.VISIBLE);
         activityList.setLayoutManager(new LinearLayoutManager(this));
         PackageNameAdapter packageNameAdapter = new PackageNameAdapter(this);
@@ -111,9 +125,9 @@ public class SelectPackageActivity extends AppCompatActivity {
      * @return 返回全部activity ArrayList<AppInfo>
      */
     private ArrayList<AppInfo> getActivitiesByApplication(AppInfo appInfo) {
-        ArrayList<AppInfo> appInfos = new ArrayList<>();
+        ArrayList<AppInfo> appList = new ArrayList<>();
         for (ActivityInfo activity : appInfo.getApplicationInfo().activities) {
-            appInfos.add(
+            appList.add(
                     new AppInfo(
                             activity.loadLabel(getPackageManager()).toString(),
                             activity.name.replace(appInfo.getPackageName(), ""),
@@ -121,7 +135,7 @@ public class SelectPackageActivity extends AppCompatActivity {
                             appInfo.getApplicationInfo()
                     ));
         }
-        return appInfos;
+        return appList;
     }
 
 
@@ -131,13 +145,13 @@ public class SelectPackageActivity extends AppCompatActivity {
      * @return 应用列表
      */
     private List<AppInfo> getPackageInfoList() {
-        List<AppInfo> packageInfos = new ArrayList<>();
+        List<AppInfo> packageList = new ArrayList<>();
         try {
             List<PackageInfo> apps = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
             for (PackageInfo app : apps) {
                 ApplicationInfo info = app.applicationInfo;
                 if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                    packageInfos.add(new AppInfo(info.loadLabel(getPackageManager()).toString(),
+                    packageList.add(new AppInfo(info.loadLabel(getPackageManager()).toString(),
                             app.packageName,
                             info.loadIcon(getPackageManager()),
                             app));
@@ -147,7 +161,7 @@ public class SelectPackageActivity extends AppCompatActivity {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        return packageInfos;
+        return packageList;
     }
 
 
@@ -168,8 +182,9 @@ public class SelectPackageActivity extends AppCompatActivity {
      */
     private boolean showPrevious() {
         if (status) {
+            nestedScrollView.fullScroll(View.FOCUS_UP);
             activityList.setVisibility(View.GONE);
-            appInfos.setVisibility(View.VISIBLE);
+            appList.setVisibility(View.VISIBLE);
             toolBarLayout.setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.size() + ")");
             status = false;
             return false;

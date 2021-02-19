@@ -1,15 +1,13 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,16 +23,19 @@ import org.litepal.tablemanager.Connector;
 import java.util.ArrayList;
 
 import top.webb_l.automatic.R;
-import top.webb_l.automatic.adapter.AutoMaticAdapter;
+import top.webb_l.automatic.adapter.ScriptsAdapter;
 import top.webb_l.automatic.data.ScriptInfo;
 import top.webb_l.automatic.model.Scripts;
 
+/**
+ * @author Webb
+ */
 public class MainActivity extends AppCompatActivity {
     private static RecyclerView rvData;
     private FloatingActionButton fabAdd;
-    private LinearLayout rootNotData;
+    public static LinearLayout rootNotData;
     public ArrayList<ScriptInfo> scripts;
-    private AutoMaticAdapter autoMaticAdapter;
+    private ScriptsAdapter scriptsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +64,11 @@ public class MainActivity extends AppCompatActivity {
         if (scripts.size() > 0) {
             rootNotData.setVisibility(View.GONE);
         }
-        autoMaticAdapter.scripts = scripts;
-        autoMaticAdapter.notifyDataSetChanged();
+        scriptsAdapter.scripts = scripts;
+        scriptsAdapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void initClicks() {
         fabAdd.setOnClickListener(v -> {
             startActivity(new Intent(this, SelectPackageActivity.class));
@@ -78,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
                     CoordinatorLayout root = findViewById(R.id.root);
                     Snackbar.make(root, "不要点我啦，我还小暂时不能帮到你。", Snackbar.LENGTH_SHORT).show();
                     break;
+                case R.id.help:
+                    Intent intent = new Intent(this, OpenWebActivity.class);
+                    intent.putExtra("url", "http://121.4.250.193/");
+                    startActivity(intent);
+                    break;
                 default:
                     break;
             }
@@ -87,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerViewItems() {
         rvData.setLayoutManager(new LinearLayoutManager(this));
-        autoMaticAdapter = new AutoMaticAdapter(this);
+        scriptsAdapter = new ScriptsAdapter(this);
         getDataBase();
-        rvData.setAdapter(autoMaticAdapter);
+        rvData.setAdapter(scriptsAdapter);
     }
 
     /**
@@ -99,26 +106,6 @@ public class MainActivity extends AppCompatActivity {
         rootNotData = findViewById(R.id.root_not_data);
         rvData = findViewById(R.id.rv_data);
         fabAdd = findViewById(R.id.fab_add);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Intent intent = new Intent(this, OpenWebActivity.class);
-                intent.putExtra("url", "http://121.4.250.193/");
-                startActivity(intent);
-                break;
-            default:
-                return false;
-        }
-        return false;
     }
 
     @Override

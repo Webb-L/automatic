@@ -1,5 +1,6 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -37,6 +38,9 @@ import top.webb_l.automatic.model.Steps;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
+/**
+ * @author Webb
+ */
 public class AddStepActivity extends AppCompatActivity {
 
     private Button addStep;
@@ -82,7 +86,7 @@ public class AddStepActivity extends AppCompatActivity {
         root = findViewById(R.id.root);
         RecyclerView recyclerView = findViewById(R.id.rv_data);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        AddStepAdapter adapter = new AddStepAdapter();
+        AddStepAdapter adapter = new AddStepAdapter(root);
         recyclerView.setAdapter(adapter);
         addStep = findViewById(R.id.add_step);
         saveStep = findViewById(R.id.save_step);
@@ -114,7 +118,7 @@ public class AddStepActivity extends AppCompatActivity {
             EditText pasteContent = findViewById(R.id.paste_content);
             String paste = pasteContent.getText().toString();
             if (searchType.get() == 0 || searchControl.get() == 0 || checkEvent.get() == 0 || TextUtils.isEmpty(search)) {
-                Snackbar.make(root, "请确保所有内容都填写完成！", LENGTH_SHORT).show();
+                Snackbar.make(root, getString(R.string.form_null), LENGTH_SHORT).show();
                 return;
             }
             stepInfo.add(new StepInfo(search, paste, searchType.get(), checkEvent.get(), searchControl.get()));
@@ -130,6 +134,7 @@ public class AddStepActivity extends AppCompatActivity {
      *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
+    @SuppressLint("NonConstantResourceId")
     private void selectEvents(CoordinatorLayout root) {
         ChipGroup chipEvent = findViewById(R.id.chip_event);
         chipEvent.setOnCheckedChangeListener((group, checkedId) -> {
@@ -150,7 +155,7 @@ public class AddStepActivity extends AppCompatActivity {
                     break;
                 default:
                     checkEvent.set(0);
-                    Snackbar.make(root, "请选择事件！", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(root, getString(R.string.select_event), LENGTH_SHORT).show();
                     break;
             }
         });
@@ -161,6 +166,7 @@ public class AddStepActivity extends AppCompatActivity {
      *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
+    @SuppressLint("NonConstantResourceId")
     private void selectControl(CoordinatorLayout root) {
         ChipGroup chipControl = findViewById(R.id.chip_control);
         chipControl.setOnCheckedChangeListener((group, checkedId) -> {
@@ -185,7 +191,7 @@ public class AddStepActivity extends AppCompatActivity {
                     break;
                 default:
                     searchControl.set(0);
-                    Snackbar.make(root, "请选择控件！", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(root, getString(R.string.select_control_prompt), LENGTH_SHORT).show();
                     break;
             }
         });
@@ -196,6 +202,7 @@ public class AddStepActivity extends AppCompatActivity {
      *
      * @param root 页面根控件用来提供给Snackbar CoordinatorLayout
      */
+    @SuppressLint("NonConstantResourceId")
     private void selectSearchType(CoordinatorLayout root) {
         ChipGroup chipSearch = findViewById(R.id.chip_search);
         chipSearch.setOnCheckedChangeListener((group, checkedId) -> {
@@ -208,7 +215,7 @@ public class AddStepActivity extends AppCompatActivity {
                     break;
                 default:
                     searchType.set(0);
-                    Snackbar.make(root, "请选择搜索类型！", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(root, getString(R.string.select_search_type_prompt), LENGTH_SHORT).show();
                     break;
             }
         });
@@ -240,12 +247,12 @@ public class AddStepActivity extends AppCompatActivity {
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(v -> {
             if (stepInfo.size() == 0) {
-                Snackbar.make(root, "你还没添加有步骤！", LENGTH_SHORT).show();
+                Snackbar.make(root, getString(R.string.no_add_step), LENGTH_SHORT).show();
                 return;
             }
             View layout = View.inflate(v.getContext(), R.layout.save_all_step, null);
             AlertDialog alertDialog = new MaterialAlertDialogBuilder(AddStepActivity.this)
-                    .setTitle("保存步骤")
+                    .setTitle(R.string.save_step)
                     .setView(layout)
                     .setCancelable(false)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -259,7 +266,7 @@ public class AddStepActivity extends AppCompatActivity {
                     String saveTitle = title.getText().toString().trim();
                     String saveDescription = description.getText().toString().trim();
                     if (TextUtils.isEmpty(saveTitle) || TextUtils.isEmpty(saveDescription)) {
-                        Snackbar.make(root, "请确保保存步骤所有内容都填写完成！", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(root, getString(R.string.save_step_null), LENGTH_SHORT).show();
                         return;
                     }
                     Drawable icon = null;
@@ -298,7 +305,7 @@ public class AddStepActivity extends AppCompatActivity {
 
     private void returnPrompt() {
         if (stepInfo.size() > 0) {
-            Snackbar.make(root, "你的数据没有保存，是否强制退出。", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, v -> finish()).show();
+            Snackbar.make(root, getString(R.string.data_no_save_cancel), LENGTH_SHORT).setAction(android.R.string.ok, v -> finish()).show();
         } else {
             finish();
         }

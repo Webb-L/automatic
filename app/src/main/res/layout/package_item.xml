@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="16dp">
 
@@ -18,34 +18,29 @@
             android:id="@+id/iv_appIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/add_step_backdrop_background_purple_500" />
+            android:src="@drawable/ic_launcher_background" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_appName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="app_name"
-                android:ellipsize="end"
-                android:lines="1"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
                 android:id="@+id/tv_appPackage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="com.packagename"
-                android:lines="3"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary" />
         </LinearLayout>
-
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="top.webb_l.automatic">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:name="org.litepal.LitePalApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.AutoAccessibility">
+        android:theme="@style/Theme.AutoAccessibility"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".acitivity.OpenWebActivity"
+            android:name=".activity.OpenWebActivity"
             android:label="@string/openWeb"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".acitivity.UseScriptActivity"
+            android:name=".activity.UseScriptActivity"
             android:label="@string/use_script"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".acitivity.EditAutoMaticActivity"
+            android:name=".activity.EditScriptActivity"
             android:label="@string/edit_script"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".acitivity.SelectPackageActivity"
+            android:name=".activity.SelectPackageActivity"
             android:label="@string/select_package"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AutoAccessibility.NoActionBar" />
         <activity
-            android:name=".acitivity.AddStepActivity"
+            android:name=".activity.AddStepActivity"
             android:label="@string/add_step"
             android:screenOrientation="portrait" />
 
         <service
             android:name=".service.AutoAccessibilityService"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -52,7 +55,7 @@
         </service>
 
         <activity
-            android:name=".acitivity.MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

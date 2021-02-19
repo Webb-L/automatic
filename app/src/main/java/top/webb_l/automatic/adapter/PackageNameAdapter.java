@@ -48,7 +48,7 @@ public class PackageNameAdapter extends RecyclerView.Adapter<PackageNameAdapter.
         holder.appPackage.setText(appInfo.getPackageName());
         holder.appIcon.setImageDrawable(appInfo.getIcon());
         holder.root.setOnClickListener(v -> {
-            if (onItemClickListener!=null) {
+            if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(appInfo);
             }
         });
@@ -59,7 +59,7 @@ public class PackageNameAdapter extends RecyclerView.Adapter<PackageNameAdapter.
         return apps.size();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
-import top.webb_l.automatic.acitivity.UseScriptActivity;
+import top.webb_l.automatic.activity.UseScriptActivity;
 import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
 
@@ -54,6 +54,7 @@ public class AutoAccessibilityService extends AccessibilityService {
         UseScriptActivity.scriptLog.setText(outLogMessage(UseScriptActivity.scriptLog.getText(), "成功", "结束执行事件！"));
     }
 
+    @SuppressLint("SetTextI18n")
     private void eventNode(HashSet<AccessibilityNodeInfo> nodeHashSet) {
         for (AccessibilityNodeInfo nodeInfo : nodeHashSet) {
             for (Steps step : findText) {
@@ -90,7 +91,7 @@ public class AutoAccessibilityService extends AccessibilityService {
     /**
      * 根据搜索类型来查找
      *
-     * @param nodeInfoHashSet
+     * @param nodeInfoHashSet 集合
      */
     private void findType(HashSet<AccessibilityNodeInfo> nodeInfoHashSet) {
         for (AccessibilityNodeInfo node : nodeInfoHashSet) {
@@ -112,7 +113,7 @@ public class AutoAccessibilityService extends AccessibilityService {
     /**
      * 根据成员属性nodeInfoHashSet来获取所有节点
      *
-     * @param node
+     * @param node 节点
      */
     private void getAllNodeInfo(AccessibilityNodeInfo node) {
         if (node == null || node.getChildCount() <= 0) {

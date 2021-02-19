@@ -1,4 +1,4 @@
-package top.webb_l.automatic.acitivity;
+package top.webb_l.automatic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,28 +17,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import top.webb_l.automatic.R;
 
+/**
+ * @author Webb
+ */
 public class OpenWebActivity extends AppCompatActivity {
+
+    private String url;
+    private WebView webView;
+    private View loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_web);
-        Intent intent = getIntent();
-        String url = intent.getStringExtra("url");
+        initData();
+        initView();
+        initWebView();
+    }
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        View loading = findViewById(R.id.loading);
-        WebView webView = findViewById(R.id.webView);
+    private void initWebView() {
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                Toast.makeText(OpenWebActivity.this, "无法打开帮助文档！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(OpenWebActivity.this, getString(R.string.no_open_help_document), Toast.LENGTH_SHORT).show();
                 finish();
                 super.onReceivedError(view, request, error);
             }
@@ -46,6 +48,7 @@ public class OpenWebActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                setTitle(webView.getTitle());
                 loading.setVisibility(View.GONE);
             }
         });
@@ -62,7 +65,22 @@ public class OpenWebActivity extends AppCompatActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setDefaultTextEncodingName("utf-8");
+    }
 
+    private void initView() {
+        setTitle(R.string.loading);
+        loading = findViewById(R.id.loading);
+        webView = findViewById(R.id.webView);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        url = intent.getStringExtra("url");
     }
 
     @Override
