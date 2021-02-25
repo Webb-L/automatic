@@ -1,6 +1,6 @@
 *.iml
 .gradle
-.idea
+.idea/*
 .DS_Store
 /build
 /captures
@@ -8,4 +8,7 @@
 .cxx
 local.properties
 app/proguard/
-app/release
+app/release/
+app/proguard-rules.pro
+app/src/main/java/top/webb_l/automatic/encryption/
+res/
