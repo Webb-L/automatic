@@ -1,6 +1,9 @@
 package top.webb_l.automatic.activity;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -8,11 +11,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -27,6 +32,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -36,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import top.webb_l.automatic.R;
 import top.webb_l.automatic.adapter.EditStepAdapter;
+import top.webb_l.automatic.encryption.ShareEncryption;
 import top.webb_l.automatic.model.Scripts;
 import top.webb_l.automatic.model.Steps;
 import top.webb_l.automatic.utils.AppInfoUtils;
@@ -159,6 +168,44 @@ public class EditScriptActivity extends AppCompatActivity {
     }
 
     /**
+     * 分享脚本到剪切板
+     *
+     * @param context    上下文用于获取字符串
+     * @param scriptInfo 脚本信息
+     */
+    private void shareScript(Context context, Scripts scriptInfo) {
+        JSONObject script = new JSONObject();
+        try {
+            script.put("title", scriptInfo.getTitle());
+            script.put("description", scriptInfo.getDescription());
+            script.put("packageName", scriptInfo.getPackageName());
+            script.put("activity", scriptInfo.getActivity());
+            JSONArray steps = new JSONArray();
+            List<Steps> stepList = LitePal.where("scripts_id = ?", String.valueOf(scriptInfo.getId())).find(Steps.class);
+            for (Steps step : stepList) {
+                JSONObject stepInfo = new JSONObject();
+                stepInfo.put("searchType", step.getSearchType());
+                stepInfo.put("searchContent", step.getSearchContent());
+                stepInfo.put("control", step.getControl());
+                stepInfo.put("event", step.getEvent());
+                stepInfo.put("pasteContent", step.getPasteContent());
+                steps.put(stepInfo);
+            }
+            script.put("steps", steps);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String encryption = ShareEncryption.encryption(script.toString());
+        if (TextUtils.isEmpty(encryption)) {
+            Toast.makeText(context, context.getString(R.string.share) + context.getString(R.string.failure), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        manager.setPrimaryClip(ClipData.newPlainText("Label", "AUTO://" + encryption));
+        Toast.makeText(context, "已保存到剪切板！", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
      * 设置图标
      *
      * @param packageName String 软件包名用来获取图标。
@@ -278,17 +325,17 @@ public class EditScriptActivity extends AppCompatActivity {
      * @param packageInfoList 包名列表 String[]
      */
     private void editPackageName(String[] packageInfoList) {
-        ArrayList<String> AppName = new ArrayList<>();
+        ArrayList<String> appName = new ArrayList<>();
         for (String s : packageInfoList) {
             String[] info = s.split("/r/");
-            AppName.add(info[0]);
+            appName.add(info[0]);
         }
         ImageView editPackageName = findViewById(R.id.editPackageName);
         editPackageName.setOnClickListener(v -> {
             AtomicInteger index = new AtomicInteger();
             new MaterialAlertDialogBuilder(this)
                     .setTitle(getResources().getString(R.string.select_package) + "(" + packageInfoList.length + ")")
-                    .setSingleChoiceItems(AppName.toArray(new String[AppName.size()]), 0, (dialog, which) -> index.set(which))
+                    .setSingleChoiceItems(appName.toArray(new String[appName.size()]), 0, (dialog, which) -> index.set(which))
                     .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> dialog.cancel())
                     .setPositiveButton(getResources().getString(android.R.string.ok), (dialog, which) -> {
                         String packageName = packageInfoList[index.get()].split("/r/")[1];
@@ -337,10 +384,20 @@ public class EditScriptActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_script, menu);
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.share:
+                shareScript(this, script);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -58,4 +58,10 @@
     <string name="package_update_prompt">请更新红色字体的内容，如果不更新会导致无法使用。</string>
     <string name="danger">危险</string>
     <string name="successfully">成功！</string>
+    <string name="share">分享</string>
+    <string name="failure">失败</string>
+    <string name="Import">导入</string>
+    <string name="wrong_format">格式错误！</string>
+    <string name="Import_failed">导入失败！</string>
+    <string name="Imported_successfully">导入成功！</string>
 </resources>

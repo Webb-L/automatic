@@ -15,6 +15,14 @@ public class StepInfo {
         this.control = control;
     }
 
+    public String getSearchContent() {
+        return searchContent;
+    }
+
+    public void setSearchContent(String searchContent) {
+        this.searchContent = searchContent;
+    }
+
     public String getPasteContent() {
         return pasteContent;
     }
@@ -31,12 +39,12 @@ public class StepInfo {
         this.searchType = searchType;
     }
 
-    public String getSearchContent() {
-        return searchContent;
+    public int getEvent() {
+        return event;
     }
 
-    public void setSearchContent(String searchContent) {
-        this.searchContent = searchContent;
+    public void setEvent(int event) {
+        this.event = event;
     }
 
     public int getControl() {
@@ -45,13 +53,5 @@ public class StepInfo {
 
     public void setControl(int control) {
         this.control = control;
-    }
-
-    public int getEvent() {
-        return event;
-    }
-
-    public void setEvent(int event) {
-        this.event = event;
     }
 }

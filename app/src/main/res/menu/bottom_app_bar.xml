@@ -10,6 +10,9 @@
     <item
         android:id="@+id/help"
         android:title="@string/help"
-        android:icon="@drawable/ic_done_24dp"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/import_script"
+        android:title="@string/Import"
         app:showAsAction="never"/>
 </menu>
